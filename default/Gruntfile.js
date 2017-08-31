@@ -192,4 +192,6 @@ module.exports = function(grunt) {
     grunt.registerTask('order_status_check', ['handlebars', 'uglify:order_status_check']);
     grunt.registerTask('delivery_estimate', ['handlebars', 'uglify:delivery_estimate']);
 
+    grunt.registerTask('build', ['sass', 'bless:css', 'handlebars', 'uglify']);
+
 };
