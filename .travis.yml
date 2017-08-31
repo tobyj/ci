@@ -10,5 +10,4 @@ install:
   - npm install
   - bower install
 before_script:
-  - cd default
   - grunt build
