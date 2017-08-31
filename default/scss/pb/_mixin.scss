@@ -1,0 +1,1062 @@
+/**
+ * Pacific Brands - Mixins
+ *
+ * This file contains framework mixins for the common and all theme stylesheets.
+ * 
+ * @category    design
+ * @package     pacbrands_default
+ * @copyright   Copyright (c) 2014 Pacific Brands Limited
+ */
+
+// =============================================
+// Mixin - TABS
+// =============================================
+
+@mixin tabs() {
+    .toggle-tabs {
+        display: block;
+        width: 100%;
+        position: relative;
+        border: 1px solid $c-module-border;
+        background-color: $c-module-background;
+
+        li {
+            float: left;
+            border-right: 1px solid transparent;
+            border-left: 1px solid transparent;
+
+            > span {
+                @include not-selectable;
+                display: inline-block;
+                padding: 0 $trim;
+                height: 40px;
+                line-height: 40px;
+                cursor: pointer;
+                text-transform: uppercase;
+                font-size: $f-size-xs;
+                position: relative;
+                bottom: -1px;
+            }
+        }
+
+        li.current {
+            border-right: 1px solid $c-module-border;
+            border-left: 1px solid $c-module-border;
+
+            > span {
+                background-color: #FFFFFF;
+                z-index: 5;
+            }
+        }
+
+        li.current span,
+        li:hover span {
+            color: $c-action;
+        }
+
+        li:first-child {
+            border-left: none;
+        }
+
+        &:after {
+            @include clearfix;
+        }
+    }
+
+    > dl {
+        width: 100%;
+
+        > dt {
+            display: none;
+        }
+
+        > dd {
+            width: 100%;
+            display: none;
+            padding: 15px;
+            border: 1px solid $c-module-border;
+            border-top: 0;
+        }
+
+        > dd.current {
+            display: block;
+        }
+    }
+}
+
+// =============================================
+// Mixin - accordionDtBase
+// =============================================
+
+@mixin accordionDtBase($arrow-direction: 'down', $border-color: $c-module-border) {
+    @include h4;
+    @include not-selectable;
+    font-weight: normal;
+    margin-bottom: 0;
+    padding: 7px 10px 7px 24px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: $border-color;
+    position: relative;
+    background-color: $c-module-background;
+
+    &:after {
+        @include triangle(#{$arrow-direction}, 4px, $c-action);
+        left: 10px;
+        top: 50%;
+        margin-top: -3px;
+    }
+
+    &:hover {
+        background-color: $c-module-background-hover;
+    }
+}
+
+// =============================================
+// Mixin - accordion
+// =============================================
+
+@mixin accordion() {
+    .toggle-tabs {
+        display: none;
+    }
+
+    > dl {
+        > dt {
+            @include accordionDtBase;
+            display: block;
+        }
+
+        > dd {
+            padding: $box-spacing;
+            margin: 0;
+            border-width: 0 1px;
+            border-style: solid;
+            border-color: $c-module-border;
+        }
+        > dd:last-child {
+            border-width: 0 1px 1px 1px;
+        }
+    }
+}
+
+// =============================================
+// Mixin - accordionCollapse
+// =============================================
+
+@mixin accordionCollapse() {
+    > dl {
+        > dt {
+            cursor: pointer;
+            border-bottom-width: 0;
+
+            &:hover {
+                color: $c-action;
+            }
+            &:after {
+                @include triangle(right, 4px, $c-action);
+            }
+            &.last {
+                border-bottom-width: 1px;
+            }
+        }
+
+        > dd {
+            display: none;
+        }
+    }
+
+    &.accordion-open {
+        > dl {
+            > dt {
+                &.current {
+                    border-bottom-width: 1px;
+                }
+
+                &.current:after {
+                    @include triangle(down, 4px, $c-action);
+                    left: 6px;
+                    top: 50%;
+                    margin-top: -3px;
+                }
+            }
+
+            > dd.current {
+                display: block;
+            }
+        }
+    }
+}
+
+// =============================================
+// Mixin - Breakpoint
+// =============================================
+
+$mq-support: true !default;
+$mq-fixed-value: 1024px !default;
+
+@mixin bp($feature, $value) {
+    // Set global device param
+    $media: only screen;
+
+    // Media queries supported
+    @if $mq-support == true {
+
+        @media #{$media} and ($feature: $value) {
+            @content;
+        }
+
+        // Media queries not supported
+    } @else {
+
+        @if $feature == 'min-width' {
+            @if $value <= $mq-fixed-value {
+                @content;
+            }
+        } @else if $feature == 'max-width' {
+            @if $value >= $mq-fixed-value {
+                @content;
+            }
+        }
+
+    }
+}
+
+/*
+// ----------------------------------------------
+// Usage example:
+// For IE set $mq-support to false.
+// Set the fixed value.
+// Then use mixins to test whether styles should be applied.
+// ----------------------------------------------
+
+$mq-support: false;
+$mq-fixed-value: 1024;
+
+// Renders at fixed value
+@include bp (min-width, 300px) { 
+    div { color:#000; }
+}
+
+// Doesn't render without MQ support
+@include bp (min-width, 1200px) { 
+    div { color:#FFF; }
+}
+
+// Doesn't render without MQ support
+@include bp (max-width, 300px) { 
+    div { color:#444; }
+}
+
+// Renders at fixed value
+@include bp (max-width, 1200px) { 
+    div { color:#888; }
+}
+
+// ----------------------------------------------
+*/
+
+// =============================================
+// Mixin - Clearfix
+// =============================================
+// This mixin is intended to be applied to an :after pseudo-class. Example:
+//  &:after {
+//      @include clearfix;
+//  }
+@mixin clearfix {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+// =============================================
+// Mixin - Resolution
+// =============================================
+// From http://blog.14islands.com/post/37259603246/sass-resolution-mixin
+@mixin if-resolution($prefix, $dppx) {
+    // 1px = 96dpi
+    $dpi: $dppx * 96;
+    @media
+    (-webkit-#{$prefix}-device-pixel-ratio: #{$dppx}),
+    (   #{$prefix}--moz-device-pixel-ratio: #{$dppx}),
+    (     -o-#{$prefix}-device-pixel-ratio: #{$dppx*2}/2),
+    (        #{$prefix}-device-pixel-ratio: #{$dppx}),
+    (                #{$prefix}-resolution: #{$dpi}dpi),
+    (                #{$prefix}-resolution: #{$dppx}dppx) {
+        @content;
+    }
+}
+
+@mixin if-min-resolution($dppx) {
+    @include if-resolution(min, $dppx) {
+        @content;
+    }
+}
+
+@mixin if-max-resolution($dppx) {
+    @include if-resolution(max, $dppx) {
+        @content;
+    }
+}
+
+// ----------------------------------------------
+// Usage example:
+// ----------------------------------------------
+
+//// Renders on screens with >= 2 resolution
+//@include if-min-resolution (2) {
+//    div { color:#000; }
+//}
+//
+//// Renders on screens with >= 1.5 resolution
+//@include if-min-resolution (1.5) {
+//    div { color:#000; }
+//}
+//
+//// Renders on screens with <= 1.5 resolution
+//@include if-max-resolution (1.5) {
+//    div { color:#000; }
+//}
+//
+//// Renders on screens with <= 2 resolution
+//@include if-max-resolution (2) {
+//    div { color:#000; }
+//}
+
+// ----------------------------------------------
+
+// =============================================
+// Mixin - Image Replacement
+// =============================================
+
+@mixin image-replacement {
+    text-indent: -9999px;
+}
+// Undo the replacement for child elements
+@mixin image-replacement-override {
+    text-indent: 0;
+}
+
+// =============================================
+// Mixin - Loading Overlay
+// =============================================
+
+@mixin loadingOverlay($opacity: 0.8) {
+    &:before,
+    &:after {
+        content:'';
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    &:before {
+        background-color: white;
+        opacity: $opacity;
+        z-index:2;
+    }
+
+    &:after {
+        background-image: url('../images/opc-ajax-loader.gif');
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index:3;
+    }
+
+    &.loading {
+        position: relative;
+
+        &:before,
+        &:after {
+            display: block;
+        }
+    }
+}
+
+// =============================================
+// Mixin - Menu
+// =============================================
+
+@mixin menu {
+    background: #FBFBFB;
+    border: solid 1px $c-module-border;
+}
+
+// =============================================
+// Mixin - Not Selectable
+// =============================================
+
+@mixin not-selectable {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+// =============================================
+// Mixin - Triangle
+// =============================================
+
+@mixin triangle($direction: up, $size: 5px, $color: #000000) {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    display: block;
+
+    @if $direction == up {
+        border-right: $size solid transparent;
+        border-left: $size solid transparent;
+        border-bottom: $size solid $color;
+        border-top: none;
+    }
+
+    @if $direction == down {
+        border-right: $size solid transparent;
+        border-left: $size solid transparent;
+        border-top: $size solid $color;
+        border-bottom: none;
+    }
+
+    @if $direction == right {
+        border-top: $size solid transparent;
+        border-bottom: $size solid transparent;
+        border-left: $size solid $color;
+        border-right: none;
+    }
+
+    @if $direction == left {
+        border-top: $size solid transparent;
+        border-bottom: $size solid transparent;
+        border-right: $size solid $color;
+        border-left: none;
+    }
+}
+
+// =============================================
+// Mixin - Fade In
+// =============================================
+
+@mixin fade-in($delay) {
+    opacity: 0;
+    @include animation(fadeIn ease-in 1);
+    @include animation-fill-mode(forwards);
+    @include animation-duration($delay);
+}
+
+// =============================================
+// Mixin - Standard Button
+// =============================================
+
+@mixin standardbutton {
+    background: black;
+    display: inline-block;
+    padding: 7px 15px;
+    border: 0;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: $base_font;
+    line-height: 19px;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+    @include transition-duration(0.3s);
+    @include transition-property(all);
+}
+
+// =============================================
+// Mixin - Standard Grey Button
+// =============================================
+
+@mixin standardgreybutton {
+    background: #f6f6f6;
+    display: inline-block;
+    padding: 7px 15px;
+    border: 0;
+    color: black;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: $base_font;
+    line-height: 19px;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+    @include transition-duration(0.3s);
+    @include transition-property(all);
+    &:hover {
+        background: grey;
+        color: white !important;
+        text-decoration: none;
+    }
+}
+
+// =============================================
+// Mixin - Opacity
+// =============================================
+
+@mixin opacity($alpha) {
+  // IE 8
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=$alpha*100)";
+  // IE 5-7
+  filter: alpha(opacity=$alpha*100);
+  // Real Browsers
+  -webkit-opacity: $alpha;
+  -moz-opacity: $alpha;
+  -khtml-opacity: $alpha;
+  opacity: $alpha;
+}
+
+// =============================================
+// Mixin - Retina Images
+// =============================================
+// adapted from http://joostkiens.com/cross-browser-media-query-mixins-for-hidpi/
+@mixin background-2x($lr-image, $hr-image) {
+    background-image: url($lr-image);
+    background-repeat: no-repeat;
+    @media print,
+    (-webkit-min-device-pixel-ratio: 1.25),
+    (-o-min-device-pixel-ratio: 5/4),
+    (min-resolution: 120dpi) { 
+        background-image: url($hr-image);
+        background-size: image-width($lr-image) image-height($lr-image);
+    }
+}
+
+// =============================================
+// Mixin - Background Transparent
+// =============================================
+// Adapted from: https://gist.github.com/kaelig/1949202
+@mixin background-transparent($color, $alpha) {
+    $rgba: rgba($color, $alpha);
+    $ie-hex-str: ie-hex-str($rgba);
+    background-color: transparent;
+    background-color: $rgba;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$ie-hex-str},endColorstr=#{$ie-hex-str});
+}
+
+// =============================================
+// Mixin - Typography
+// =============================================
+
+@mixin h1 {
+    margin: 0;
+    margin-bottom: 0.7em;
+    color: $c-h1;
+    font-family: $f-stack-special;
+    font-size: 28px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.2;
+    text-rendering: optimizeLegibility;
+    text-transform: uppercase;
+}
+
+@mixin h2 {
+    margin: 0;
+    margin-bottom: 0.5em;
+    color: $c-h2;
+    font-family: $f-stack-special;
+    font-size: 24px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.2;
+    text-rendering: optimizeLegibility;
+    text-transform: uppercase;
+}
+
+@mixin h3 {
+    margin: 0;
+    margin-bottom: 10px;
+    color: $c-h3;
+    font-family: $f-stack-special;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.4;
+    text-rendering: optimizeSpeed;
+    text-transform: uppercase;
+}
+
+@mixin h4 {
+    margin: 0;
+    margin-bottom: 10px;
+    color: $c-h4;
+    font-family: $f-stack-special;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 1.4;
+    text-rendering: optimizeSpeed;
+    text-transform: uppercase;
+}
+
+@mixin h5 {
+    margin: 0;
+    margin-bottom: 10px;
+    color: $c-h5;
+    font-family: $f-stack-sans;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 1.4;
+    text-rendering: optimizeSpeed;
+    text-transform: uppercase;
+}
+
+@mixin h6 {
+    margin: 0;
+    margin-bottom: 5px;
+    color: $c-h6;
+    font-family: $f-stack-sans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 1.4;
+    text-rendering: optimizeSpeed;
+    text-transform: uppercase;
+}
+
+@mixin pageTitle() {
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: 600;
+    color: $c-text;
+    border-bottom: 1px solid $c-module-border-light;
+    padding-bottom: 3px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+// =============================================
+// Mixin - Remove Omega
+// =============================================
+@mixin remove-omega {
+  float: left;
+  margin-right: gutter();
+}
+
+// =============================================
+// Mixin - CSS Calc (adds prefixes)
+// =============================================
+@mixin calc($property, $expression) {
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -webkit-calc(#{$expression});
+  #{$property}: unquote("calc(#{$expression})");
+}
+
+// =============================================
+// Mixin - Placeholder
+// =============================================
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}
+}
+
+// =============================================
+// Mixin - Retina background image
+// =============================================
+@mixin background-image-retina($file, $type, $width, $height) {
+  background-image: url($file + '.' + $type);
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (-moz-min-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-device-pixel-ratio: 2),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx){
+    & {
+      background-image: url($file + '@2x.' + $type);
+      @include background-size($width $height);
+    }
+  }
+}
+
+// =============================================
+// Placeholder selectors
+// =============================================
+
+%clearfix {
+    &:before, &:after {
+        content: "";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+    zoom: 1;
+}
+
+%reset_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// =============================================
+// Mixins - Flexbox
+// =============================================
+// For more information see https://gist.github.com/cimmanon/727c9d558b374d27c5b6
+
+// NOTE:
+// -----
+// All mixins for the @box spec have been written assuming they'll be fed property values that
+// correspond to the standard spec.  Some mixins can be fed values from the @box spec, but don't
+// rely on it.  The `legacy-order` mixin will increment the value fed to it because the @box
+// `box-ordinal-group` property begins indexing at 1, while the modern `order` property begins
+// indexing at 0.
+
+// @private Flex
+// -------------
+// September 2012 Candidate Recommendation (http://www.w3.org/TR/2012/CR-css3-flexbox-20120918/)
+// NOTE: FF did not support wrapping until version ??.  Because the `display: flex` property
+// is wrapped in a `@supports (flex-wrap: wrap)` block (when $flex-wrap-required or the $wrap
+// argument to the `display-flex` mixin is set to `true`), it will Just Work(TM) when support is
+// finally added
+// Chrome 21 (prefixed)
+// Opera 12.1 (unprefixed)
+// Firefox 20 (unprefixed)
+
+// @private css3-feature-support variables must always include a list of five boolean values
+// representing in order: -moz, -webkit, -o, -ms, -khtml.
+$flex-support: not -moz, -webkit, not -o, not -ms, not -khtml !default;
+
+// if `true`, `$flex-legacy-enabled` is treated as false and an `@supports` block is added to
+// the display property to hide the standard value from versions of Firefox that support the
+// unprefixed properties, but do not support wrapping
+// (this includes suppressing the automatic emittion of @box properties)
+$flex-wrap-required : false !default;
+
+// @private Flexbox
+// ----------------
+// March 2012 Working Draft (http://www.w3.org/TR/2012/WD-css3-flexbox-20120322/)
+// Chrome 17 (prefixed)
+// Internet Explorer 10 (prefixed)
+
+// @private css3-feature-support variables must always include a list of five boolean values
+// representing in order: -moz, -webkit, -o, -ms, -khtml.
+$flexbox-support: not -moz, not -webkit, not -o, -ms, not -khtml, not standard !default;
+
+// @private Box
+// ------------
+// July 2009 Working Draft (http://www.w3.org/TR/2009/WD-css3-flexbox-20090723/)
+// NOTE: no browser that implements this spec is known to support `box-lines: multiple`
+// Chrome 4? (prefixed)
+// Safari 3.1 (prefixed)
+// Firefox <20 (prefixed)
+
+// @private css3-feature-support variables must always include a list of five boolean values
+// representing in order: -moz, -webkit, -o, -ms, -khtml.
+$box-support: -moz, -webkit, not -o, not -ms, not -khtml, not standard !default;
+
+// If `true`, the @box properties will be emitted as part of the normal mixin call
+// (if this is false, you're still free to explicitly call the legacy mixins yourself)
+$flex-legacy-enabled: false !default;
+
+// The modern `flex-direction` property corresponds to two properties in the @box spec and the
+// `legacy-flex-direction` mixin will emit both by default.
+
+//  This variable controls the emition of the `box-direction` property:
+//     true   : always emit
+//     false  : always suppress
+//     normal : only emit if the direction is `normal`
+//     reverse: only emit if the direction is `reverse`
+$flex-legacy-direction: true !default;
+
+//  This variable controls the emition of the `box-orient` property:
+//     true      : always emit
+//     false     : always suppress
+//     horizontal: only emit if the orient is `horizontal`
+//     vertical  : only emit if the orient is `vertical`
+$flex-legacy-orient: true !default;
+
+// @doc off
+
+// Common Mixins
+// =============
+
+// @doc on
+
+// function for converting a value from the standard specification to one that is comparable from
+// an older specification
+@function flex-translate-value($value, $version: box) {
+    //$value: unquote($value);
+
+    @if $value == flex {
+        @return if($version == box, box, flexbox);
+    } @else if $value == inline-flex {
+        @return if($version == box, inline-box, inline-flexbox);
+    } @else if $value == flex-start {
+        @return start;
+    } @else if $value == flex-end {
+        @return end;
+    } @else if $value == space-between {
+        @return justify;
+    } @else if $value == space-around { // @box doesn't have a value equivalent to `space-around`
+        @return if($version == box, justify, distribute);
+    }
+    @return $value;
+}
+
+@function flex-support-common() {
+    $common: ();
+    @for $i from 1 through length($flex-support) {
+        $common: append($common, nth($flex-support, $i) or nth($flexbox-support, $i), comma);
+    }
+    @return $common;
+}
+
+// @doc off
+
+// Display Property
+// ================
+
+// @doc on
+
+// $type: flex | inline-flex
+@mixin display-flex($type: flex, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) {
+    @if $legacy and not $wrap {
+        @include legacy-display-flex($type);
+    }
+
+    @include experimental-value(display, flex-translate-value($type, flexbox), $flexbox-support...);
+
+    // if `$wrap` is true, then we need to suppress official support as generated by the `experimental()`
+    // mixin so that we can insert it inside an `@supports` block
+    $flex-support-standard: true;
+    $flex-support-list: $flex-support;
+    @if length($flex-support) > 5 {
+        $flex-support-standard: nth($flex-support, 6);
+        // a `slice()` function would really be handy here...
+        $flex-support-list: nth($flex-support, 1), nth($flex-support, 2), nth($flex-support, 3), nth($flex-support, 4), nth($flex-support, 5);
+    }
+    $flex-support-list: append($flex-support-list, if($wrap, false, $flex-support-standard));
+    @include experimental-value(display, $type, $flex-support-list...);
+
+    @if $wrap and $flex-support-standard {
+        @supports (flex-wrap: wrap) {
+            display: $type;
+        }
+    }
+}
+
+@mixin legacy-display-flex($type: flex) {
+    @include experimental-value(display, flex-translate-value($type, box), $box-support...);
+}
+
+// @doc off
+
+// Flex Container Properties
+// =========================
+
+// @doc on
+
+// $value: <'flex-direction'> || <'flex-wrap'>
+@mixin flex-flow($value: row nowrap, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled, $orient: $flex-legacy-orient, $direction: $flex-legacy-direction) {
+    @if $legacy and not $wrap {
+        @include legacy-flex-flow($value, $orient, $direction);
+    }
+
+    @include experimental(flex-flow, $value, flex-support-common()...);
+}
+
+@mixin legacy-flex-flow($value: row nowrap, $orient: $flex-legacy-orient, $direction: $flex-legacy-direction) {
+    @if length($value) > 1 { // @box version doesn't have a shorthand
+        @include legacy-flex-direction(nth($value, 1), $orient, $direction);
+        @include legacy-flex-wrap(nth($value, 2));
+    } @else {
+        //$value: unquote($value);
+        @if $value == row or $value == row-reverse or $value == column or $value == column-reverse {
+            @include legacy-flex-direction($value);
+        } @else {
+            @include legacy-flex-wrap($value);
+        }
+    }
+}
+
+// $value: row | row-reverse | column | column-reverse
+@mixin flex-direction($value: row, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled, $orient: $flex-legacy-orient, $direction: $flex-legacy-direction) {
+    @if $legacy and not $wrap {
+        @include legacy-flex-direction($value, $orient, $direction);
+    }
+
+    @include experimental(flex-direction, $value, flex-support-common()...);
+}
+
+@mixin legacy-flex-direction($value: row, $orient: $flex-legacy-orient, $direction: $flex-legacy-direction) {
+    //$value: unquote($value);
+    $translated-orient: if($value == row or $value == row-reverse, horizontal, vertical);
+    $translated-direction: if($value == row or $value == column, normal, reverse);
+
+    @if $orient == true or $translated-orient == $orient {
+        @include experimental(box-orient, $translated-orient, $box-support...);
+    }
+
+    @if $direction == true or $translated-direction == $direction {
+        @include experimental(box-direction, $translated-direction, $box-support...);
+    }
+}
+
+// $value: nowrap | wrap | wrap-reverse
+@mixin flex-wrap($value: nowrap, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) {
+    @if $legacy and not $wrap {
+        @include legacy-flex-wrap($value);
+    }
+
+    @include experimental(flex-wrap, $value, flex-support-common()...);
+}
+
+@mixin legacy-flex-wrap($value: nowrap) {
+    // NOTE: @box has no equivalent of wrap-reverse
+    @include experimental(box-lines, if($value == nowrap, single, multiple), $box-support...);
+}
+
+// Distributing extra space along the "main axis"
+// $value: flex-start | flex-end | center | space-between | space-around
+@mixin justify-content($value: flex-start, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) {
+    @if $legacy and not $wrap {
+        @include legacy-justify-content($value);
+    }
+
+    @include experimental(flex-pack, flex-translate-value($value, flexbox), $flexbox-support...);
+    @include experimental(justify-content, $value, $flex-support...);
+}
+
+@mixin legacy-justify-content($value: flex-start) {
+    @include experimental(box-pack, flex-translate-value($value, box), $box-support...);
+}
+
+// Distributing extra space along the "cross axis"
+// $value: flex-start | flex-end | center | space-between | space-around | stretch
+@mixin align-content($value: flex-start) {
+    // There is no @box version of this property
+
+    @include experimental(flex-line-pack, flex-translate-value($value, flexbox), $flexbox-support...);
+    @include experimental(align-content, $value, $flex-support...);
+}
+
+// Align items along the "cross axis"
+// $value: flex-start | flex-end | center | baseline | stretch
+@mixin align-items($value: stretch, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) { // the flex container
+    @if $legacy and not $wrap {
+        @include legacy-align-items($value);
+    }
+    @include experimental(flex-align, flex-translate-value($value, flexbox), $flexbox-support...);
+    @include experimental(align-items, $value, $flex-support...);
+}
+
+@mixin legacy-align-items($value: flex-start) {
+    @include experimental(box-align, flex-translate-value($value, box), $box-support...);
+}
+
+// @doc off
+
+// Flex Item Properties
+// ====================
+
+// @doc on
+
+// $value: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]
+@mixin flex($value: 0 1 auto, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) {
+    //$value: unquote($value);
+    @if $legacy and unitless(nth($value, 1)) {
+        @include legacy-flex($value);
+    }
+
+    @include experimental(flex, $value, flex-support-common()...);
+}
+
+@mixin legacy-flex($value: 0) {
+    $value: nth($value, 1);
+    @if not unitless($value) {
+        @warn 'The legacy flex property `box-flex` requires an Integer (eg. 1)';
+    }
+    @include experimental(box-flex, $value, $box-support...);
+}
+
+// $value: Integer
+@mixin flex-grow($value: 0, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) {
+    // There is no @box version of this property
+    // There is no @flexbox version of this property
+    @include experimental(flex-grow, $value, $flex-support...);
+}
+
+// $value: Integer
+@mixin flex-shrink($value: 1) {
+    // There is no @box version of this property
+    // There is no @flexbox version of this property
+    @include experimental(flex-shrink, $value, $flex-support...);
+}
+
+// $value: united number (eg: 100px)
+@mixin flex-basis($value: auto) {
+    // There is no @box version of this property
+    // There is no @flexbox version of this property
+    @include experimental(flex-basis, $value, $flex-support...);
+}
+
+// Align items along the "cross axis" -- overrides `align-items` value on individual items
+// $value: auto | flex-start | flex-end | center | baseline | stretch
+@mixin align-self($value: auto) { // children of flex containers
+    // There is no @box version of this property
+    @include experimental(flex-item-align, flex-translate-value($value, flexbox), $flexbox-support...);
+    @include experimental(align-self, $value, $flex-support...);
+}
+
+// $value: Integer
+@mixin order($value: 0, $wrap: $flex-wrap-required, $legacy: $flex-legacy-enabled) {
+    @if $legacy and not $wrap {
+        @include legacy-order($value);
+    }
+
+    @include experimental(flex-order, $value, $flexbox-support...);
+    @include experimental(order, $value, $flex-support...);
+}
+
+@mixin legacy-order($value: 0) {
+    // the @box spec starts the ordering at 1 instead of 0 like the modern specs
+    @include experimental(box-ordinal-group, $value + 1, $box-support...);
+}
+
+
+// =============================================
+// Mixin - Input placeholder
+// =============================================
+@mixin optional-at-root($sel) {
+    @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+        @content;
+    }
+}
+
+@mixin input-placeholder {
+    @include optional-at-root('&::-webkit-input-placeholder') {
+        @content;
+    }
+
+    @include optional-at-root('&:-moz-placeholder') {
+        @content;
+    }
+
+    @include optional-at-root('&::-moz-placeholder') {
+        @content;
+    }
+
+    @include optional-at-root('&:-ms-input-placeholder') {
+        @content;
+    }
+}
+
+@mixin vw-font($vw-size, $min, $max, $max-width: 1280px){
+    font-size: $min;
+    font-size: $vw-size;
+    @include breakpoint($max-width) {
+        font-size: $max;
+    }
+}

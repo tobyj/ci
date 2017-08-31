@@ -1,0 +1,20 @@
+/**
+ * Pacific Brands - Common IE8 Stylesheet 
+ *
+ * This is a stub to generate pbcommon-ie8.css, do not modify.
+ *  
+ * @category    design
+ * @package     pacbrands_default
+ * @copyright   Copyright (c) 2014 Pacific Brands Limited
+ */
+
+// ==============================================
+// Application Core / No MQ for Lte-IE8 Use
+// ==============================================
+
+$mq-support: false;
+$mq-fixed-value: 1024px;
+
+@import "framework";
+@import "common";
+

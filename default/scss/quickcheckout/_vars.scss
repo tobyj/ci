@@ -1,0 +1,83 @@
+/*
+DO NOT change these here - they can all be overridden at theme level (see theme/scss/quickcheckout.scss)
+*/
+@import "susy";
+$checkout-bg:             #eee;
+$screen-columns:          12 !default;
+$box-shadow:              0 4px 10px -5px rgba(0,0,0,0.5);
+$btn-border-radius:       3px;
+$input-text-bg:           #fff;
+$text-transform:          uppercase;
+
+$minWidth:                320px;
+$bp2:                     500px; //update _pca.scss if editing
+$bp3:                     768px;
+$bp5:                     960px;
+$mobile:                  max-width 600px;
+$tablet:                  max-width 768px;
+$desktop:                 769px;
+$bp3max:                  $bp3 - 1;
+$bp5max:                  $bp5 - 1;
+$bpHeight:                min-height 620px;
+$bp4max:                  1600px; //($bp2*3); //1500px
+$color_highlight:         #3beab0;
+$color_highlight2:        desaturate( $color_highlight, 20% ); //on msg background
+$color_success:           #3FC380;
+$color_fail:              #ff6367;
+$color_submit:            #ef5562;
+$transition_timing:       cubic-bezier(0.16, 0.36, 0, 0.98);
+//theme
+$color_theme_fg:          #ffffff;
+$color_theme_bg:          #000000;
+//header
+$color_logo:              $color_theme_fg;
+$color_header_fg:         $color_theme_fg;
+$color_header_bg:         $color_theme_bg;
+//subheader
+$color_sub_header_fg:     $color_theme_bg;
+$color_sub_header_bg:     $color_theme_fg;
+//column titles (e.g. how do you want to checkout)
+$column-title-fg:         #fff;
+$column-title-bg:         #000;
+//totals:
+$color_summary_bg:        #000000;
+$color_summary_fg:        #ffffff;
+$color_summary_bg_faint:  lighten($color_summary_bg, 20);
+$color_summary_fg_faint:  darken($color_summary_fg, 20);
+//tabs:
+$color_tab_default_bg:    #a7a7a7;
+$color_tab_default_fg:    #ffffff;
+$color_tab_selected_bg:   #737373;
+//saved addresses:
+$color_address_selected_fg: #565656;
+$color_address_selected_bg: #ffffff;
+//low stock warning
+$color_stock_warn_fg:     #ff6367;
+$color_stock_warn_bg:     #ff0;
+//buttons
+$color_theme_btn_bg:      #000000;
+$color_theme_btn_fg:      #ffffff;
+//quantity buttons
+$color_plusminus_btn_bg:  $color_tab_default_bg;
+//msg boxes:
+$color_info:              #e6e6e6;
+$color_info_fg:           #000000;
+$color_modal_cover:       rgba(0,0,0,0.8);
+$mobile_product_pad:      3px;
+// Cart Indicator:
+$mbp-cart-indicator-desktop-top:  0.9em !default;
+$mbp-cart-indicator-desktop-left: 2em !default;
+$mbp-cart-indicator-mobile-top:  1.8em !default;
+$mbp-cart-indicator-mobile-left: 1.4em !default;
+// Header Padding
+$mbp_header_bp: max-width 1200px;
+$mbp_header_body_padding_mobile: 130px !default;
+$mbp_header_body_padding_tablet: 125px !default;
+$mbp_header_body_padding_desktop: 170px !default;
+
+/*
+$base_font: "Futura W01 Book", sans-serif;
+$base_font_medium: "Futura W01 Medium", sans-serif;
+$base_font_heavy: "Futura PT W01 Heavy", sans-serif;
+$alt_font: "Helvetica Neue", sans-serif;
+*/

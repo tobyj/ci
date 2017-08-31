@@ -1,0 +1,125 @@
+{{#group items by="store_code"}}
+    <div class="store-group-title store-{{value}}"><i class="q_{{value}}"></i></div>
+    {{#each items}}
+        <article{{#if url}} data-url="{{url}}"{{/if}} class="{{stock_status}}{{#if is_free}} free-product{{/if}}{{#compare is_valid "===" false}} invalid reason-{{invalid_reason}}{{/compare}}"{{#if options.size.option_id}} data-super-attribute="super_attribute[{{options.size.option_id}}]={{options.size.value_id}}"{{/if}} data-pid="{{product_id}}"{{#if parent_product_id}} data-parent-pid="{{parent_product_id}}{{/if}}" data-type="{{type}}" data-brand="{{brand}}" data-store="{{store_code}}" data-giftable="{{is_giftable}}">
+        <figure>
+            <img src="{{thumbnail_url}}" alt="{{name}}" title="{{sku}}" />
+        </figure>
+        <div class="detail">
+            <p class="product_title">{{#if is_free}}<span class="free-product-label">Free</span> {{/if}}{{name}}</p>
+
+            <div class="price-box">
+                {{#if canApplyMsrp}}
+                    See price before order confirmation
+                {{else}}
+
+                    {{#compare original_price ">" sell_price}}
+                        <p class="old-price">
+                            <span class="price-label hidden">Regular Price:</span>
+                            <span class="price" id="old-price-{{product_id}}">{{formatcurrency original_price}}</span>
+                        </p>
+                        <p class="special-price">
+                            <span class="price-label hidden">Special Price</span>
+                            <span class="price" id="product-price-{{product_id}}" data-save-amt="{{calculateSaving original_price sell_price}}">{{formatcurrency sell_price}}</span>
+                        </p>
+                    {{else}}
+                        <span class="regular-price" id="product-price-{{product_id}}">
+                            <span class="price">{{formatcurrency sell_price}}</span>
+                        </span>
+                    {{/compare}}
+
+                {{/if}}
+            </div>
+
+            {{#each options}}
+                <p class="{{#compare @key "!=" "message"}}ellipsis {{/compare}}option-{{@key}}" title="{{qc_translate name}}"><span>
+                    {{getOptionValue @key value}}
+                </span></p>
+            {{/each}}
+
+            {{#if has_fabric_protection}}
+                <div class="fabric-protection">+ Fabric Protection {{formatcurrency fabric_protection_cost}}</div>
+            {{/if}}
+            {{#if dispatch_time}}
+                <div class="dispatch-estimate">Estimated Dispatch {{dispatch_time}}</div>
+            {{/if}}
+
+        </div>
+        <div class="editproduct">
+            <div class="plusminus trash" data-ajax-id="{{quote_item_id}}"{{#unless allowed_quantity}} data-val="0"{{/unless}}{{#compare is_valid "===" false}} data-val="0"{{/compare}}>
+                <button type="button"{{#compare quantity ">=" allowed_quantity}} disabled{{/compare}}{{#if is_free}} disabled title="Free product quantity cannot be updated"{{/if}}{{#compare is_valid "===" false}} disabled{{/compare}}></button>
+                <input title="Quantity" type="number" name="prodQty[{{product_id}}]" data-current="{{quantity}}" value="{{#compare is_valid "===" false}}0{{else}}{{quantity}}{{/compare}}" min="0" max="{{allowed_quantity}}" pattern="[0-9]" autocomplete="off"{{#if is_free}} disabled{{/if}}{{#compare is_valid "===" false}} disabled{{/compare}}>
+                <button type="button" class="{{#unless allowed_quantity}}zero{{/unless}}{{#compare is_valid "===" false}} zero{{/compare}}"{{#if is_free}}{{#compare quantity ">" allowed_quantity}}{{else}} disabled title="Free product quantity cannot be updated"{{/compare}}{{/if}}></button>
+            </div>
+        </div>
+    </article>
+    {{/each}}
+{{/group}}
+
+{{#if giftbox}}
+    <article class="gift-boxing{{#if giftbox.is_boxed}} has-gift-option{{/if}}">
+
+        <input type="hidden" name="gift_option_id" value="{{giftbox.option_id}}" />
+        <figure class="gift-box-img">
+            <img src="{{giftbox.image}}" alt="Gift Box">
+        </figure>
+
+        <div class="giftbox-action-container">
+            {{#unless giftbox.is_boxed}}
+                <div class="instructions detail">
+                    <p class="product_title">Gift Box your order for {{formatcurrency giftbox.price}}</p>
+                    <div class="description">
+                        {{qc_translate "Your products will arrive in a premium gift box, complete with a personal card from you."}}
+                    </div>
+                    <button type="button" class="btn create l_full"><i class="q_gift"></i> Gift Box your order</button>
+                </div>
+            {{else}}
+                <div class="detail">
+                    <p class="product_title"><i class="q_gift"></i> Gift Box</p>
+                    <div class="price-box text-total">{{formatcurrency giftbox.price}}</div>
+                </div>
+
+                {{! GIFT MESSAGE: }}
+                <div class="form-container clearfix" style="clear: both">
+                    <input name="has_gift_message" id="has_gift_message" class="visuallyhidden" autocomplete="off"
+                           type="checkbox"{{#if giftbox.messages}} checked="checked"{{/if}}>
+
+                    <div class="msg">
+                        <div class="toggle-on">Include a <label for="has_gift_message">Gift Message</label></div>
+                        <div class="toggle-off hidden">Include a Gift Message <label class="cancel" for="has_gift_message"><i class="q_cross"></i></label></div>
+                    </div>
+
+                    <div class="form"{{#unless giftbox.messages}} style="display:none"{{/unless}}>
+                        <div class="msg">{{qc_translate "Your message will be printed on a card and placed in the gift box."}}</div>
+
+                        <div class="field fixed-label">
+                            <input type="text" name="gift_message[from]" id="gift-message-from" autocomplete="off"
+                                   maxlength="{{giftbox.max_length.from}}"
+                                   value="{{giftbox.messages.from}}" placeholder="Sender name" required />
+                            <label for="gift-message-from" data-invalid-msg="From - required"><span>From</span></label>
+                        </div>
+
+                        <div class="field fixed-label">
+                            <input type="text" name="gift_message[to]" id="gift-message-to" autocomplete="off"
+                                   maxlength="{{giftbox.max_length.to}}"
+                                   value="{{giftbox.messages.to}}" placeholder="Recipient name" required />
+                            <label for="gift-message-to" data-invalid-msg="To - required"><span>To</span></label>
+                        </div>
+
+                        <div class="textarea field fixed-label">
+                            <textarea autocomplete="off" id="gift-message-message" placeholder="Message (max. {{giftbox.max_length.msg}} characters)"
+                                      maxlength="{{giftbox.max_length.msg}}"
+                                      name="gift_message[message]" required>{{giftbox.messages.message}}</textarea>
+                            <label for="gift-message-message" data-invalid-msg="Message - required">Message <span class="characters-remaining">(<span class="charCount">{{giftbox.max_length.msg}}</span> characters remaining)</span></label>
+                        </div>
+                    </div>
+                </div>
+            {{/unless}}
+        </div>
+
+        {{#if giftbox.is_boxed}}
+            <a href="#" class="giftbox_remove remove remove-right" title="Remove Gift Box"><i class="q_cross"></i></a>
+        {{/if}}
+
+    </article>
+{{/if}}

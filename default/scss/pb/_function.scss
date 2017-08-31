@@ -1,0 +1,59 @@
+/**
+ * Pacific Brands - Framework Functions
+ *
+ * This file contains framework functions for the common and all theme stylesheets.
+ * 
+ * @category    design
+ * @package     pacbrands_default
+ * @copyright   Copyright (c) 2014 Pacific Brands Limited
+ */
+
+// =============================================
+// Function - Black
+// =============================================
+@function black ($opacity) {
+    @return rgba(0, 0, 0, $opacity);
+}
+
+// =============================================
+// Function - Black Fallback
+// =============================================
+@function black-fallback ($opacity) {
+    @return lighten(#000000, (1 - $opacity));
+}
+
+// =============================================
+// Function - White
+// =============================================
+@function white ($opacity) {
+    @return rgba(255, 255, 255, $opacity);
+}
+
+// =============================================
+// Function - White Fallback
+// =============================================
+@function white-fallback ($opacity) {
+    @return darken(#FFFFFF, (1 - $opacity));
+}
+
+// =============================================
+// Function - Pixels to Ems
+// =============================================
+// Description: Returns pixel value to ems base-font-size on base-font-size font size
+// Example: font-size: toEms(14px);;
+@function toEms($target, $context: $base_font_size){
+  $return: 0;
+  @if $target != 0 {
+    $return: #{( $target / $context ) + 'em'};
+  }
+  @return $return;
+}
+
+// =============================================
+// Function - Pixels to Percentage
+// =============================================
+// Description: Returns Percentage Value, pixel value compared to context value
+// Example: @include toPercentage(120, 90);
+@function toPercentage($target, $context){
+  @return #{(( $target / $context ) * 100 ) + '%'};
+}

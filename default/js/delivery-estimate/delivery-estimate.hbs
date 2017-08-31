@@ -1,0 +1,17 @@
+<h3>Delivery estimate for {{postcode}}</h3>
+<div class="standard {{#unless standard.status}}un{{/unless}}available">
+    {{#if standard.status}}
+        <p><strong>{{#compare standard.price "==" "0.00"}}FREE {{/compare}}Standard shipping (${{standard.price}})</strong><br>
+            <span>Order {{#if cutoff}}before {{cutoff}}{{else}}now{{/if}} to get your goodies delivered on {{standard.date}}.</span></p>
+    {{else}}
+        <p>Sorry, standard shipping is temporarily unavailable.</p>
+    {{/if}}
+</div>
+<div class="express {{#unless express.status}}un{{/unless}}available">
+    {{#if express.status}}
+        <p><strong>Express shipping (${{express.price}})</strong><br>
+            <span>Order {{#if cutoff}}before {{cutoff}}{{else}}now{{/if}} to get your goodies delivered on {{express.date}}.</span></p>
+    {{else}}
+        <p>Sorry, express shipping is temporarily unavailable.</p>
+    {{/if}}
+</div>

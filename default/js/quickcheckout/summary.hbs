@@ -1,0 +1,77 @@
+<div class="total-before-discounts">
+    <div><b><span data-ajax-totalitems data-show-val="{{summary.item_count}}">{{summary.item_count}}</span></b>{{#if summary.discounts}} BEFORE DISCOUNTS{{/if}}{{#if summary.totals.giftcardaccount.value}}{{#if summary.discounts}} &{{else}} BEFORE{{/if}} GIFT CARDS{{/if}}</div>
+    <div class="amount" data-total-before-discount>{{formatcurrencyNoSymbol summary.totals.subtotal.value}}</div>
+</div>
+
+{{#if summary.discounts}}
+    <div class="discounts">
+        <input type="checkbox" id="toggleDiscounts{{#if instance}}{{instance}}{{/if}}">
+        <label for="toggleDiscounts{{#if instance}}{{instance}}{{/if}}">DISCOUNTS{{!--TODO show " and PROMOS" if promos present--}}</label>
+        <div class="amount" data-ajax-discounts-total data-show-val="{{formatcurrencyNoSymbol summary.totals.discount.value}}">{{formatcurrencyNoSymbol summary.totals.discount.value}}</div>
+        <div class="all">
+            {{#each summary.discounts}}
+                <div class="discount" data-id="{{identifier}}" data-store-code="{{store_code}}" data-type="{{type}}" data-method="{{method}}" data-method-amount="{{method_amount}}" title="{{name}}">
+                    <div class="desc" {{#if code}}data-code="{{code}}"{{/if}}><i class="mbp-on-only q_{{store_code}}"></i> {{label}}{{#if code}} [{{code}}]{{/if}}</div>
+                    <div class="amount" data-ajax-discount data-show-val="-{{formatcurrencyNoSymbol value}}">SAVE {{formatcurrency value}}</div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+{{/if}}
+
+<div class="shipping">
+    <div>
+        <b title="{{summary.shipping.method}}">{{summary.totals.shipping.title}}</b> {{#compare summary.shipping.method "==" "clickcollect_store"}}In Store{{else}}TO {{summary.shipping.country}}{{/compare}}
+        <span class="mbp-on-only mbp-flag your-country-flag trigger-flag-modal triggered-from-cart allowed"><i class="q_cross"></i><i class="q_checkmark"></i><img src="{{MageUrl.skin}}../default/images/flags/{{toLowerCase summary.shipping.country}}.png"></span>
+    </div>
+    <div class="amount" data-ajax-shipping data-show-val="{{formatcurrencyNoSymbol summary.totals.shipping.value}}" data-rate="{{summary.shipping.method}}"><span>{{formatcurrencyNoSymbol summary.totals.shipping.value}}</span></div>
+</div>
+
+{{#if instance}}<input type="hidden" name="shipping_method" value="{{summary.shipping.method}}">{{/if}}
+
+{{!-- hide shipping upsell until backend sorted
+{{#if summary.shipping.threshold.spendmore}}
+    <span class="msg spendmore error">Spend {{formatcurrency summary.shipping.threshold.spendmore}} more for {{#compare summary.shipping.threshold.above "==" 0}}FREE{{/compare}}{{#compare summary.shipping.threshold.above ">" 0}}reduced{{/compare}} international shipping!</span>
+{{else}}
+    {{#compare summary.shipping.threshold.below ">" summary.shipping.threshold.above}}
+        <span class="msg spendmore success">You qualify for <strong>{{#compare summary.shipping.threshold.above "==" 0}}FREE{{else}}reduced{{/compare}}</strong> international shipping!</span>
+    {{/compare}}
+{{/if}}
+--}}
+
+{{#if summary.totals.giftwrapping.value}}
+    <div class="giftbox">
+        <div>
+            <b>Gift Box (Incl. Tax) <a class="giftbox_remove remove" title="Remove Gift Box" href="#removegiftbox"><i class="q_cross"></i></a></b>
+        </div>
+        <div class="amount" data-giftbox-cost="{{summary.totals.giftwrapping.value}}">{{formatcurrencyNoSymbol summary.totals.giftwrapping.value}}</div>
+    </div>
+{{/if}}
+
+{{#if summary.totals.giftcardaccount.value}}
+    <div class="giftcards">
+        {{#each summary.giftcardaccount}}
+            <div><b>{{formatcurrency total}} Gift card</b> <span class="code">{{number}}</span> <a class="remove full-only" title="Remove Gift Card" href="#removegiftcard" data-cardno="{{number}}" data-expiry="{{expiry}}"><i class="q_cross"></i></a>
+                <div class="amount" data-ajax-giftcards data-show-val="-{{applied}}">-{{formatcurrencyNoSymbol applied}}</div></div>
+        {{/each}}
+    </div>
+{{/if}}
+
+{{#if summary.totals.customerbalance.value}}
+<div class="storecredit">
+    <div><b>{{summary.totals.customerbalance.title}}</b>{{#if summary.customerbalance.remaining}}<span> (Balance {{formatcurrency summary.customerbalance.remaining}})</span>{{/if}} <a class="remove full-only" href="#removestorecredit" title="Remove {{formatcurrencyNoSymbol summary.totals.customerbalance.title}}"><i class="q_cross"></i></a></div>
+    <div class="amount" data-show-val="{{formatcurrencyNoSymbol summary.totals.customerbalance.value}}"><span>{{formatcurrencyNoSymbol summary.totals.customerbalance.value}}</span></div>
+</div>
+{{/if}}
+
+<div class="grandtotal">
+    <div><b>TOTAL</b>
+        {{#unless summary.totals.tax.value}} {{currency}} excl. import taxes+fees{{/unless}}
+        {{#if summary.totals.tax.value}}{{#compare summary.totals.tax.value "!=" "0.00"}} INC <span data-ajax-tax>{{formatcurrencyNoSymbol summary.totals.tax.value}} {{summary.totals.tax.title}}</span>{{/compare}}{{/if}}
+    </div>
+    <div class="amount" data-ajax-grandtotal data-show-val="{{formatcurrencyNoSymbol summary.totals.grand_total.value}}"><span>{{formatcurrency summary.totals.grand_total.value}}</span></div>
+</div>
+
+{{#unless instance}}
+<button type="button" class="button btn btn_full proceed-checkout">PROCEED TO CHECKOUT</button>
+{{/unless}}

@@ -1,0 +1,19 @@
+/**
+ * Pacific Brands - Common Stylesheet
+ *
+ * This is a stub to generate pbcommon.css, do not modify.
+ *  
+ * @category    design
+ * @package     pacbrands_default
+ * @copyright   Copyright (c) 2014 Pacific Brands Limited
+ */
+
+// ==============================================
+// Core Application / Full MQ Support
+// ==============================================
+
+$mq-support: true;
+$mq-fixed-value: false;
+
+@import "framework";
+@import "common";

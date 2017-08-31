@@ -1,0 +1,616 @@
+<div class="left-side will-load">
+    <div class="column-title l_full">{{#if customer.identities}}{{qc_translate "You are currently signed in as"}}{{else}}{{qc_translate "How do you want to checkout?"}}{{/if}}</div>
+    {{#if customer.identities}}
+        <div class="msg welcome-back l_full">
+            {{#each customer.identities}}
+                <div class="store-{{store_code}}" data-hash="{{@key}}"><span class="mbp-on-only"><i class="q_{{store_code}}"></i><br></span>Hi <strong class="chop-email">{{first_name}}</strong>! <span class="nobreak">{{qc_translate "Not you?"}} <a id="signout" class="discreet" href="{{getStoreBaseUrl store_code}}customer/account/logout">{{qc_translate "Sign out"}}</a></span></div>
+            {{/each}}
+        </div>
+
+        <div class="select-profile mbp-on-only l_full">
+            <div class="field fixed-label{{#onlyOneEmail}} hidden{{/onlyOneEmail}}">
+                <div class="inline_select tiny isloading">
+                    <select name="identity_hash" id="identity_hash" class="validate-select" title="Select Email">
+                        {{prepareProfileOptions}}
+                    </select>
+                    <label for="identity_hash">Send email confirmation to:</label>
+                </div>
+            </div>
+            <div class="msg shadowup">
+                <i class="q_checkmark"></i> Your order confirmation will be sent to <br><strong>{{#each customer.identities}}{{#compare @index "==" 0}}{{email}}{{/compare}}{{/each}}</strong>
+            </div>
+        </div>
+
+    {{else}}
+
+        {{#if config.config.checkout_methods.register_cta}}
+            <div class="msg signup-cta l_full">{{replaceSignUpPlaceholder config.config.checkout_methods.register_cta}}</div>
+        {{/if}}
+
+        <section>
+            <input type="radio" id="rg_checkout1" name="rg_checkout" value="rg_checkout1" required checked autocomplete="off" class="vc-ship-false" />
+            <label for="rg_checkout1" onclick>As<br> Guest</label>
+            <input type="radio" id="rg_checkout4" name="rg_checkout" value="rg_checkout4" required autocomplete="off" class="vc-ship-false" />
+            <label for="rg_checkout4" onclick>As<br> Member</label>
+            {{#if config.config.checkout_methods.paypal_checkout}}
+            <input type="radio" id="rg_checkout3" name="rg_checkout" value="rg_checkout3" required autocomplete="off" />
+            <label for="rg_checkout3" title="PayPal Express" onclick>With<br> Paypal</label>
+            {{/if}}
+            {{!--{{#if config.config.checkout_methods.visa_checkout}}{{#if config.config.payment_methods.visa_checkout_visible}}
+            <input type="radio" id="rg_checkout2" name="rg_checkout" value="rg_checkout2" required autocomplete="off" class="init-visacheckout vc-ship-true" />
+            <label for="rg_checkout2" title="Visa Checkout" onclick><i class="q_visa-checkout-alt"></i></label>
+            {{/if}}{{/if}}--}}
+        </section>
+    {{/if}}
+
+    <ul class="l_full clearfix">
+
+        <li data-inputid="rg_checkout4">
+            <div class="signininput will-load">
+                <div class="msg login"><span>Enter your <i class="q_store mbp-on-only"></i> details <label for="forgot" class="discreet">{{qc_translate "Forgot password?"}}</label></span></div>
+
+                <input type="checkbox" name="forgot" id="forgot">
+                <div class="msg forgot"><span>Reset your password below. <label class="discreet" for="forgot">Back to sign in</label></span> <label class="cancel" for="forgot"><i class="q_cross"></i></label></div>
+
+                <div class="fields">
+                    <div class="field fixed-label">
+                        <input type="email" name="login[username]" id="signin_username" placeholder="Email address" class="required-entry" required>
+                        <label for="signin_username" data-invalid-msg="Email address - Invalid"><span>Email address</span></label>
+                    </div>
+                    <div class="field fixed-label">
+                        <input type="password" name="login[password]" id="signin_password" placeholder="Password" class="required-entry" required>
+                        <label for="signin_password">Password</label>
+                        <button type="button" class="reveal"></button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn login"><i class="q_checkmark"></i></button>
+
+                <div class="reset-email">
+                    <div class="field fixed-label">
+                        <input type="email" name="reset_email" id="reset_email" placeholder="Email address" class="required-entry" required>
+                        <label for="reset_email" data-invalid-msg="Email address - Invalid"><span>Email address to reset</span></label>
+                    </div>
+                    <button type="button" class="btn reset"><i class="q_checkmark"></i></button>
+                </div>
+            </div>
+        </li>
+
+        <li data-inputid="rg_checkout1" class="active">
+
+            {{#unless customer.identities}}
+            <div class="inner collapse-on-sign-in l_full">
+
+                <div class="msg">{{qc_translate "Enter an email address to receive your order confirmation."}}</div>
+
+                <div class="field">
+                    <input id="userEmail" class="needsclick required-entry" type="email" name="guest_email" required="required" placeholder="Email address" value="{{customer.defaultIdentity.email}}">
+                    <label for="userEmail" data-invalid-msg="Please enter a valid email address"><span>Email address</span></label>
+                </div>
+
+            </div>
+            {{/unless}}
+
+            <div class="column-title l_full">{{qc_translate "How do you want to receive your order?"}}</div>
+
+            <div class="deliveryoptions">
+                {{!--hide the whole section if pickup is disabled (would only leave one option)--}}
+                <section{{#unless cartView.summary.pickup_methods}} class="hidden"{{/unless}}>
+                    <input type="radio" id="rg_delivery1" class="required-entry" name="rg_delivery" value="delivery" required {{#compare cartView.summary.shipping_method "!=" "clickcollect_warehouse"}}{{#compare cartView.summary.shipping_method "!=" "clickcollect_store"}}checked{{/compare}}{{/compare}} />
+                    <label for="rg_delivery1" onclick>DELIVER TO...</label>
+                    {{#if cartView.summary.pickup_methods}}
+                    <input type="radio" id="rg_delivery2" class="required-entry" name="rg_delivery" value="pickup" required {{#compare cartView.summary.shipping_method "==" "clickcollect_warehouse"}}checked{{/compare}}{{#compare cartView.summary.shipping_method "==" "clickcollect_store"}}checked{{/compare}} />
+                    <label for="rg_delivery2" onclick>COLLECT FROM...</label>
+                    {{/if}}
+                </section>
+
+                <ul class="clearfix pca-here">
+                    <li data-inputid="rg_delivery1" class="{{#compare cartView.summary.shipping_method "!=" "clickcollect_warehouse"}}{{#compare cartView.summary.shipping_method "!=" "clickcollect_store"}}active {{/compare}}{{/compare}}will-load">
+                        <div class="inner">
+
+                            {{#if customer.addresses}}
+                                <input type="checkbox" name="newaddress" id="newaddress">
+                                <div class="msg">Select delivery address or <label for="newaddress">Add new address</label></div>
+                                <div class="addresses addresses-ship clearfix">
+                                    {{#if config.hidden_addresses}}<div class="msg saved-addresses-unavail-note">{{config.hidden_addresses}} saved address{{#compare config.hidden_addresses "!=" "1"}}es are{{else}} is{{/compare}} unavailable. <a href="#addresses-unavailable-info" class="discreet saved-addresses-unavail-why">Why?</a></div>{{/if}}
+                                {{#each customer.addresses}}
+                                    <div data-country="{{country}}" class="address{{#compare ../customer.defaultIdentity.default_shipping_address "==" @key}}{{#countryallowed country}} selected-ship{{/countryallowed}}{{/compare}}{{#countryallowed country}}{{else}} hidden ship-not-allowed{{/countryallowed}}"{{#compare ../customer.defaultIdentity.default_shipping_address "==" @key}}{{#countryallowed country}} data-default-ship{{/countryallowed}}{{/compare}}>
+                                        <span><span class="firstname">{{first_name}}</span> <span class="lastname">{{last_name}}</span></span>
+                                        <span class="street1">{{street_1}}</span>
+                                        {{#if street_2}}<span class="street2">{{street_2}}</span>{{/if}}
+                                        {{#if street_3}}<span class="street3">{{street_3}}</span>{{/if}}
+                                        <span><span class="city">{{city}}</span> <span class="region">{{region}}</span></span>
+                                        <span><span class="country_id">{{country}}</span> <span class="postcode">{{postcode}}</span></span>
+                                        <span class="region_id hidden">{{getRegionIdByName country region}}</span>
+
+                                        <input type="radio" id="address_ship_{{@key}}" name="address_ship_picker" value="{{@key}}"{{#compare ../customer.defaultIdentity.default_shipping_address "==" @key}}{{#countryallowed country}} checked{{/countryallowed}}{{/compare}}>
+                                        <label class="setaddress ship" for="address_ship_{{@key}}" onclick{{#compare ../customer.defaultIdentity.default_shipping_address "==" @key}}{{#countryallowed country}} data-default-ship{{/countryallowed}}{{/compare}}></label>
+
+                                        {{!--<label class="setaddress bill" for="address_bill_{{@key}}" onclick{{#compare ../customer.defaultIdentity.default_billing_address "==" @key}} data-default-bill{{/compare}}></label>--}}
+                                    </div>
+                                {{/each}}
+                                </div>
+                            {{/if}}
+
+                            <div class="address-fields">
+
+                                <div class="msg"><span>{{qc_translate "Enter your delivery details."}}</span>{{#if customer.addresses}} <label class="cancel" for="newaddress" title="use a saved address"><i class="q_cross"></i></label>{{/if}}</div>
+
+                                <div class="firstlast firstlast-customer">
+                                    <div class="field fixed-label">
+                                        <input id="shipping:firstname" class="required-entry" name="shipping[firstname]" type="text" required="required" maxlength="255" placeholder="First name" value="{{customer.first_name}}">
+                                        <label for="shipping:firstname" data-invalid-msg="First name - required"><span>First name</span></label>
+                                    </div>
+                                    <div class="field fixed-label">
+                                        <input id="shipping:lastname" class="required-entry" name="shipping[lastname]" type="text" required="required" maxlength="255" placeholder="Last name" value="{{customer.last_name}}">
+                                        <label for="shipping:lastname" data-invalid-msg="Last name - required"><span>Last name</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="field fixed-label">
+                                    <div class="inline_select tiny isloading">
+                                        <select name="shipping[country_id]" id="shipping:country_id" class="validate-select" title="Country">
+                                            {{#each countries}}
+                                                <option value="{{value}}"{{#compare value "==" ../cartView.summary.shipping.country}} selected{{/compare}}>{{label}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <label for="shipping:country_id">Destination Country</label>
+                                    </div>
+                                </div>
+
+                                <div class="field fixed-label">
+                                    {{!-- autocomplete="off" is set on focus of field, this way the field still gets populated if autocompleting from elsewhere --}}
+                                    <input type="text" name="shipping[street][0]" value="" title="Street Address 1" id="shipping:street1" class="input-text required-entry" maxlength="150" placeholder="Type to search; e.g. 10 Main St Sydney" required>
+                                    <label for="shipping:street1">Shipping Address</label>
+                                </div>
+
+                                <!--
+                                <input type="checkbox" name="manualentry_ship" id="manualentry_ship" value="1" checked="checked" class="visuallyhidden">
+                                <div class="msg cantfind hidden">Can't find your address? <label for="manualentry_ship">Enter address manually</label></div>
+                                -->
+
+                                <div class="all-fields x-hidden">
+
+                                    <div class="field">
+                                        <input type="text" name="shipping[street][1]" value="" title="Street Address 2" id="shipping:street2" class="input-text address-line2" maxlength="150" placeholder="Address line 2">
+                                        <label for="shipping:street2">Shipping Address Line 2</label>
+                                    </div>
+
+                                    <div class="field hidden">
+                                        <input type="text" name="shipping[street][2]" value="" title="Street Address 3" id="shipping:street3" class="input-text address-line3" maxlength="150" placeholder="Address line 3">
+                                        <label for="shipping:street3">Shipping Address Line 3</label>
+                                    </div>
+
+                                    <div class="field">
+                                        <input type="text" name="shipping[city]" value="" title="Suburb" id="shipping:city" class="input-text required-entry" maxlength="50" placeholder="Suburb">
+                                        <label for="shipping:city">Suburb</label>
+                                    </div>
+
+                                    <div class="field">
+                                        <input type="text" name="shipping[postcode]" value="" title="Postcode" id="shipping:postcode" class="input-text validate-zip-international required-entry" maxlength="20" placeholder="Postcode">
+                                        <label for="shipping:postcode">Postcode</label>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="inline_select">
+                                            <select name="shipping[region_id]" id="shipping:region_id" title="State / Territory" class="validate-select{{#regionRequired "AU"}} required-entry{{/regionRequired}}">
+                                                <option value="">State / Territory</option>
+                                                <option value="485">Australian Capital Territory</option>
+                                                <option value="486">New South Wales</option>
+                                                <option value="487">Northern Territory</option>
+                                                <option value="488">Queensland</option>
+                                                <option value="489">South Australia</option>
+                                                <option value="490">Tasmania</option>
+                                                <option value="491">Victoria</option>
+                                                <option value="492">Western Australia</option>
+                                            </select>
+                                        </div>
+                                        <div class="hidden">
+                                            <input type="text" name="shipping[region]" id="shipping:region" maxlength="20" value="" title="State / Region" class="input-text{{#regionRequired "AU"}} required-entry{{/regionRequired}}" placeholder="State / Region">
+                                            <label for="shipping:region"{{#regionRequired "AU"}} class="required"{{/regionRequired}}>State / Territory</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="msg delivery-estimate aus-only shadowup hidden will-load">Fetching shipping estimate...</div>
+
+                            {{#if config.config.delivery_methods.delivery.extended_delivery_options}}
+                            <div class="extended_delivery inline_select aus-only{{#compare cartView.summary.shipping.country "!=" "AU"}} hidden{{/compare}}">
+                                <label for="extended_delivery" class="visuallyhidden">Optional delivery options</label>
+                                <select name="not_home" id="extended_delivery">
+                                    <option value="">If you're not at home...</option>
+                                    <option value="leave">Leave parcel at door</option>
+                                    <option value="lpo">Return to local post office</option>
+                                </select>
+                            </div>
+                            {{/if}}
+
+                        </div>
+                    </li>
+                    {{#if cartView.summary.pickup_methods}}
+                    <li data-inputid="rg_delivery2" class="{{#compare cartView.summary.shipping.method "==" "clickcollect_warehouse"}}active{{/compare}}{{#compare cartView.summary.shipping.method "==" "clickcollect_store"}}active{{/compare}}">
+                        <div class="pickuplocations will-load inner">
+
+                            <div class="msg">Enter name of the person collecting the goods</div>
+                            <div class="firstlast firstlast-pickup">
+                                <div class="field fixed-label">
+                                    <input id="shipping:firstname2" class="required-entry" name="shipping[firstname]" type="text" required="required" maxlength="255" placeholder="First name" value="{{customer.defaultIdentity.first_name}}">
+                                    <label for="shipping:firstname2" data-invalid-msg="First name - required"><span>First name</span></label>
+                                </div>
+                                <div class="field fixed-label">
+                                    <input id="shipping:lastname2" class="required-entry" name="shipping[lastname]" type="text" required="required" maxlength="255" placeholder="Last name" value="{{customer.defaultIdentity.last_name}}">
+                                    <label for="shipping:lastname2" data-invalid-msg="Last name - required"><span>Last name</span></label>
+                                </div>
+                            </div>
+
+                            <div class="msg pickupmsg">{{#compare cartView.summary.shipping.country "==" "AU"}}{{qc_translate "Search for a location to collect your order"}}{{else}}Note: Pick up only available within Australia.{{/compare}}</div>
+
+                            <div class="locationfield field fixed-label">
+                                <input id="pickupNear" type="search" placeholder="Suburb or Postcode" autocomplete="off">
+                                <label for="pickupNear">POSTCODE or SUBURB</label>
+                                <button type="button" id="nearMe"><span><i class="q_target"></i></span><span> NEAR ME</span></button>
+                            </div>
+
+                            <div class="pickuphbs">{{!--pickup.hbs--}}</div>
+
+                            <input type="hidden" name="clickcollect_storecode" value="">
+                        </div>
+                    </li>
+                    {{/if}}
+                </ul>
+
+                <div class="field{{#unless cartView.summary.has_studio_items}} hidden{{/unless}}">
+                    <input id="telephone" class="input-text validate-phoneLax required-entry" type="tel" name="shipping[telephone]" value="{{telephone}}" required="required" placeholder="Phone Number" required />
+                    <label for="telephone" data-invalid-msg="Please enter a valid Phone Number"><span>Phone Number</span></label>
+                </div>
+
+                {{!-BILLING FIELDS:--}}
+                <input type="checkbox" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" value="1" checked="checked" class="visuallyhidden">
+                <div class="msg different-billing">
+                    <label for="billing:use_for_shipping_yes" onclick tabindex="0"></label> Billing address is the same as shipping address
+                </div>
+
+                <div class="billing-fields clearfix">
+
+                    {{#if customer.addresses}}
+                        <input type="checkbox" name="newaddress_bill" id="newaddress_bill">
+                        <div class="msg">Select billing address or <label for="newaddress_bill">Add new address</label></div>
+                        <div class="addresses addresses-bill clearfix">
+                            {{#each customer.addresses}}
+                                <div class="address{{#compare ../customer.defaultIdentity.default_billing_address "==" @key}} selected-bill{{/compare}}{{#compare ../customer.defaultIdentity.default_shipping_address "==" @key}} selected-ship{{/compare}}"{{#compare ../customer.defaultIdentity.default_billing_address "==" @key}} data-default-bill{{/compare}}>
+                                    <span><span class="firstname">{{first_name}}</span> <span class="lastname">{{last_name}}</span></span>
+                                    <span class="street1">{{street_1}}</span>
+                                    {{#if street_2}}<span class="street2">{{street_2}}</span>{{/if}}
+                                    {{#if street_3}}<span class="street3">{{street_3}}</span>{{/if}}
+                                    <span><span class="city">{{city}}</span> <span class="region">{{region}}</span></span>
+                                    <span><span class="country_id">{{country}}</span> <span class="postcode">{{postcode}}</span></span>
+
+                                    <input type="radio" id="address_bill_{{@key}}" name="address_bill_picker" value="{{@key}}"{{#compare ../customer.defaultIdentity.default_billing_address "==" @key}} checked{{/compare}}>
+                                    <label class="setaddress bill" for="address_bill_{{@key}}" onclick{{#compare ../customer.defaultIdentity.default_billing_address "==" @key}} data-default-bill{{/compare}}></label>
+
+                                    {{!--<label class="setaddress ship" for="address_ship_{{@key}}" onclick{{#compare ../customer.defaultIdentity.default_shipping_address "==" @key}} data-default-ship{{/compare}}></label>--}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+
+                    <div class="address-fields">
+
+                        {{#if customer.identities}}
+                            <div class="msg"><span>Enter your billing details</span>{{#if customer.addresses}} <label class="cancel" for="newaddress_bill" title="use a saved address"><i class="q_cross"></i></label>{{/if}}</div>
+                        {{/if}}
+
+                        <div class="field">
+                            <input id="billing:firstname" class="required-entry" name="billing[firstname]" type="text" required="required" maxlength="255" placeholder="First name" value="{{customer.defaultIdentity.first_name}}">
+                            <label for="billing:firstname" data-invalid-msg="First name - required"><span>First name</span></label>
+                        </div>
+                        <div class="field">
+                            <input id="billing:lastname" class="required-entry" name="billing[lastname]" type="text" required="required" maxlength="255" placeholder="Last name" value="{{customer.defaultIdentity.last_name}}">
+                            <label for="billing:lastname" data-invalid-msg="Last name - required"><span>Last name</span></label>
+                        </div>
+
+                        <div class="field">
+                            <div class="inline_select tiny isloading">
+                                <select name="billing[country_id]" id="billing:country_id" title="Country">
+                                    {{#each config.billing_countries}}
+                                        <option value="{{value}}"{{#compare value "==" ../cartView.summary.shipping.country}} selected{{/compare}}>{{label}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="field fixed-label">
+                            <input type="text" name="billing[street][0]" value="" title="Street Address 1" id="billing:street1" class="input-text required-entry" maxlength="150" placeholder="Type to search; e.g. 10 Main St Sydney">
+                            <label for="billing:street1">Billing Address</label>
+                        </div>
+
+                        <div class="field">
+                            <input type="text" name="billing[street][1]" value="" title="Street Address 2" id="billing:street2" class="input-text" maxlength="150" placeholder="Address line 2">
+                            <label for="billing:street2">Billing Address Line 2</label>
+                        </div>
+
+                        <div class="two_inputs">
+                            <div class="field">
+                                <input type="text" name="billing[city]" value="" title="Suburb" id="billing:city" class="input-text required-entry" maxlength="50" placeholder="Suburb">
+                                <label for="billing:city">Suburb</label>
+                            </div>
+
+                            <div class="field">
+                                <input type="text" name="billing[postcode]" value="" title="Postcode" id="billing:postcode" class="input-text validate-zip-international required-entry" maxlength="20" placeholder="Postcode">
+                                <label for="billing:postcode">Postcode</label>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="inline_select">
+                                <select name="billing[region_id]" id="billing:region_id" title="State / Territory" class="validate-select required-entry">
+                                    <option value="">State / Territory</option>
+                                    <option value="485">Australian Capital Territory</option>
+                                    <option value="486">New South Wales</option>
+                                    <option value="487">Northern Territory</option>
+                                    <option value="488">Queensland</option>
+                                    <option value="489">South Australia</option>
+                                    <option value="490">Tasmania</option>
+                                    <option value="491">Victoria</option>
+                                    <option value="492">Western Australia</option>
+                                </select>
+                            </div>
+                            <div class="hidden">
+                                <input type="text" name="billing[region]" id="billing:region" maxlength="20" value="" title="State / Territory" class="input-text required-entry" placeholder="State">
+                                <label for="billing:region" class="required">State / Territory</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {{!-//BILLING FIELDS:--}}
+
+            </div>{{!--/deliveryoptions--}}
+
+        </li>
+        {{!--{{#if config.config.checkout_methods.visa_checkout}}{{#if config.config.payment_methods.visa_checkout_visible}}
+        <li data-inputid="rg_checkout2">
+            <div class="msg">VISA Checkout offers a fast and easy checkout experience by storing your payment and address details. Usage requires a VISA Checkout account in order to proceed.<br><strong>Note: </strong> Payment with Visa credit card can also be made using our <label for="rg_checkout1" class="discreet">Secure Checkout</label> option. {{#if cartView.summary.pickup_methods}}<br><strong>Note:</strong> Click &amp; Collect is not available when using VISA Checkout.{{/if}}</div>
+        </li>
+        {{/if}}{{/if}}--}}
+        {{#if config.config.checkout_methods.paypal_checkout}}
+        <li data-inputid="rg_checkout3">
+            <div class="msg">PayPal offers a fast and easy checkout experience by storing your payment and address details. After Paypal Checkout is complete you will be returned here to finalise your order.{{#if cartView.summary.pickup_methods}}<br><strong>Note:</strong> Click &amp; Collect is not available when using PayPal checkout.{{/if}}</div>
+        </li>
+        {{/if}}
+    </ul>
+
+</div>
+<div class="right-side l_full clearfix" data-waypoint="payment">
+
+    <div class="column-title how-want-pay l_full">{{qc_translate "How do you want to pay?"}}</div>
+
+    {{#if cartView.summary.customerbalance}}
+
+        <input type="checkbox" name="payment[use_customer_balance]" id="use_customer_balance" value="0" class="visuallyhidden"{{#if cartView.summary.totals.customerbalance.value}} checked{{/if}}>
+        <div class="msg-cust-bal"><div class="msg">
+            You have {{formatcurrency cartView.summary.customerbalance.total}} store credit. <label for="use_customer_balance" onclick>Use your store credit</label>{{!--remaining_customer_balance--}}
+        </div></div>
+    {{/if}}
+
+    <div class="nogiftcards l_full mbp-multi-only">
+        <input type="checkbox" name="nogiftcards" id="nogiftcards">
+        <div class="msg">Looking to use a gift card? <label for="nogiftcards">Help</label></div>
+        <div class="nogiftcards_info">
+            <div class="msg">Gift Card Information <label class="cancel" for="nogiftcards"><i class="q_cross"></i></label></div>
+            <div class="information">Unfortunately, payment via gift cards for BONDS & CO. orders is not yet available. We’re currently in the process of setting this up, so do appreciate your patience. In the meantime, you can still use your gift cards in stores.</div>
+        </div>
+    </div>
+
+    <div class="entercode l_full">
+        <input type="checkbox" name="entercode" id="entercode">
+        <div class="msg"><span class="mbp-multi-hide">Gift card or </span>promo code? <label for="entercode">Enter Code</label></div>
+        <div class="giftcardinput will-load">
+            <div class="msg"><span>Enter your <span class="mbp-multi-hide">gift card or </span>promo code</span> <label class="cancel" for="entercode"><i class="q_cross"></i></label></div>
+            <div class="fields">
+                <div class="field fixed-label">
+                    <input type="text" name="giftcard_num" id="giftcard_num" placeholder="Enter your code" pattern="(^[0-9]{19}$)|(^[a-zA-Z0-9]{12}$)|(^[a-zA-Z0-9%]{3,15}$)" maxlength="19"/>
+                    <label for="giftcard_num"><span class="mbp-multi-hide">Gift card number / </span>promo code</label>
+                </div>
+                <div class="field fixed-label mbp-multi-hide">
+                    <input type="text" name="giftcard_pin" id="giftcard_pin" placeholder="••••" minlength="4" maxlength="4" class="required-entry" required disabled tabindex="-1">
+                    <label for="giftcard_pin">PIN</label>
+                </div>
+                <button type="button" class="btn"><i class="q_checkmark"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary l_full"></div>
+
+    {{!--{{#if config.config.checkout_methods.visa_checkout}}{{#if config.config.payment_methods.visa_checkout_visible}}
+        <li data-inputid="rg_checkout2">
+            <div class="inner center">
+                <img alt="Visa Checkout" class="v-button imgbtn ship-true" role="button" src="{{config.config.payment_methods.visa_gateway.url_button}}?size=425" tabindex="0" data-payment-method="vme">
+                <a href="#" class="v-learn v-learn-default more-info-visa-checkout" aria-label="Learn more about Visa Checkout">Tell Me More</a>
+            </div>
+        </li>
+    {{/if}}{{/if}}--}}
+
+    {{#if config.config.checkout_methods.paypal_checkout}}
+        <li data-inputid="rg_checkout3">
+            <div class="inner center paypal-express-checkout will-load">
+                <p class="imgbtn paypal-logo{{#unless cartView.summary.totals.grand_total.value}} hidden{{/unless}}">
+                    <a data-action="checkout-form-submit" href="{{config.base_url}}paypal/express/start/button/1/">
+                        <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Checkout with PayPal" title="Checkout with PayPal" />
+                    </a>
+                </p>
+                <p class="imgbtn paypal-unavailable{{#if cartView.summary.totals.grand_total.value}} hidden{{/if}}">Paypal checkout is not required, <br>your order total is zero</span>.</p>
+            </div>
+        </li>
+    {{/if}}
+
+    <div class="paymentoptions will-load{{#unless cartView.summary.totals.grand_total.value}} hidden{{/unless}}">
+        <section>
+            <input type="radio" id="rg_payment1" name="rg_payment" checked/>
+            <label for="rg_payment1" title="CREDIT CARD" onclick><i class="q_visa"></i><i class="q_mastercard"></i><i class="q_amex"></i></label>
+            {{#if config.config.payment_methods.paypal_express_visible}}
+                <input type="radio" id="rg_payment2" name="rg_payment" />
+                <label for="rg_payment2" title="PAYPAL" onclick><i class="q_paypal-alt"></i></label>
+            {{/if}}
+            {{#if config.config.payment_methods.visa_checkout}}{{#if config.config.payment_methods.visa_checkout_visible}}
+                <input type="radio" id="rg_payment3" name="rg_payment" class="init-visacheckout vc-ship-false" />
+                <label for="rg_payment3" title="VISA CHECKOUT" onclick><i class="q_visa-checkout-alt"></i></label>
+            {{/if}}{{/if}}
+            {{#if config.config.payment_methods.afterpay}}
+                <input type="radio" id="rg_payment4" name="rg_payment" />
+                <label for="rg_payment4" title="AFTERPAY" onclick><i class="q_afterpay-stacked"></i></label>
+            {{/if}}
+        </section>
+
+        <ul class="paymentitems clearfix">
+            <li data-inputid="rg_payment1" class="active">
+
+                <div class="creditcardinput">
+                    <div class="fields">
+                        <div class="field">
+                            <input type="tel" name="card_num" id="card_num" class="cc-num" placeholder="•••• •••• •••• ••••" autocomplete="cc-number">
+                            <label for="card_num">Card Number</label>
+                        </div>
+                        <div class="two_inputs">
+                        <div class="field">
+                            <input type="tel" name="card_exp" id="card_exp" class="cc-exp" placeholder="MM/YY" autocomplete="cc-exp">
+                            <label for="card_exp">Expiry</label>
+                        </div>
+                        <div class="field">
+                            <input type="tel" name="card_cvc" id="card_cvc" class="cc-cvc" placeholder="CVC" autocomplete="off">
+                            <label for="card_cvc">CVC</label>
+                        </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="payment[method]" value="">
+                    <input type="hidden" name="payment_method" value="">{{!--just for store credit--}}
+                    <input type="hidden" name="payment[cc_number]" value="">
+                    <input type="hidden" name="payment[cc_type]" value="">
+                    <input type="hidden" name="payment[cc_last4]" value="">
+                    <input type="hidden" name="payment[cc_exp_month]" value="">
+                    <input type="hidden" name="payment[cc_exp_year]" value="">
+                    <input type="hidden" name="payment[cc_cid]" value="">
+
+                </div>
+                <div class="fineprint">By ordering you agree to <a class="nobreak" href="{{config.base_url}}terms-and-conditions" target="_blank">Terms &amp; Conditions</a></div>
+                <div class="inner">
+                    <button type="submit" data-payment-method="cybersource_soap" id="submit-order" class="btn submit-order"><i class="q_secure"></i> ORDER &amp; PAY <span class="isloading tiny" data-ajax-grandtotal data-show-val="{{cartView.summary.totals.grand_total.value}}"><span>{{formatcurrency cartView.summary.totals.grand_total.value}}</span></span></button>
+                    <a class="trust" href="https://trustsealinfo.websecurity.norton.com/splash?form_file=fdf/splash.fdf&dn={{{getLocationHostname}}}&lang=en" target="_blank" onclick="quickCheckout.popup(this.getAttribute('href')); return false;"><img width="130" height="88" src="{{config.skin_url}}../default/images/norton-seal.gif" alt="Click to Verify - This site has chosen an SSL Certificate to improve Web site security" /></a>
+                </div>
+            </li>
+            {{#if config.config.payment_methods.paypal_express_visible}}
+            <li data-inputid="rg_payment2">
+                <div class="msg"><strong class="hidden">Please Note: </strong>After Paypal payment is complete you will be returned here to finalise your order.</div>
+                <div class="fineprint">By ordering you agree to <a class="nobreak" href="{{config.base_url}}terms-and-conditions" target="_blank">Terms &amp; Conditions</a></div>
+                <div class="inner center">
+                    <button type="submit" data-payment-method="paypal_express" id="submit-order-paypal" class="btn submit-order"><i class="q_paypal"></i> PAY <span class="isloading tiny" data-ajax-grandtotal data-show-val="{{cartView.summary.totals.grand_total.value}}"><span>{{formatcurrency cartView.summary.totals.grand_total.value}}</span></span>&nbsp;with PAYPAL</button>
+                </div>
+            </li>
+            {{/if}}
+            {{#if config.config.payment_methods.visa_checkout}}{{#if config.config.payment_methods.visa_checkout_visible}}
+            <li data-inputid="rg_payment3">
+                <div class="msg"><strong class="hidden">Please Note: </strong>After VISA Checkout is complete you will be returned here to finalise your order.</div>
+                <div class="fineprint">By ordering you agree to <a class="nobreak" href="{{config.base_url}}terms-and-conditions" target="_blank">Terms &amp; Conditions</a></div>
+                <div class="inner center">
+                    <img alt="Visa Checkout" class="v-button" role="button" src="{{config.config.payment_methods.visa_gateway.url_button}}?size=425" tabindex="0" data-payment-method="vme">
+                </div>
+            </li>
+            {{/if}}{{/if}}
+            {{#if config.config.payment_methods.afterpay}}
+            <li data-inputid="rg_payment4" data-payment_method="afterpay">
+                <div class="msg">Check out with Afterpay and pay over time.</div>
+
+                {{!--<img src="{{config.skin_url}}../../base/default/afterpay/images/ap-logo-152x31.png" id="afterpay-logo"> – Buy now, pay later!<span id="afterpay_checkout_payovertime_headline"></span>--}}
+
+                <div class="hide-quote-has-giftcard{{#unless cartView.summary.has_giftcard_items}} hidden{{/unless}}">
+                    <br />
+                    Sorry, orders containing Gift Cards are unable to be completed using Afterpay. Please try another payment method or remove the gift card from your bag.
+                </div>
+
+                <div class="hide-store-pickup{{#unless shippingMethodIsPickup}} hidden{{/unless}}">
+                    <br />
+                    Sorry, Click and Collect orders are unable to be completed using Afterpay. Please try another payment method or change your delivery method.
+                </div>
+
+                <div class="hide-min-max-amount{{#compare cartView.summary.totals.grand_total.value "<=" config.config.payment_methods.afterpay.maxprice}} hidden{{/compare}}">
+                    <br />
+                    Sorry, Afterpay can only be used on orders less than ${{config.config.payment_methods.afterpay.maxprice}}.
+                    Please try another payment method or reduce the total amount of your bag.
+                </div>
+
+                <div class="afterpay-installment-details{{#unless canPayWithAfterpay}} hidden{{/unless}}">
+                    <div id="payment_form_afterpaypayovertime">
+                        <ul class="form-list">
+                            <li class="form-alt">
+                                <div class="instalments">
+                                    <p class="header-text">
+                                        Pay four equal interest-free* payments fortnightly (totalling <span class="grand-total">{{formatcurrency cartView.summary.totals.grand_total.value}}</span>) and receive your order now!
+                                        <a href="#afterpay-what-is-modal" id="what-is-afterpay-trigger">More info.</a>
+                                    </p>
+                                    <ul class="cost">
+                                        <li class="installment">{{{formatcurrency afterpay.installment}}}</li>
+                                        <li class="installment">{{{formatcurrency afterpay.installment}}}</li>
+                                        <li class="installment">{{{formatcurrency afterpay.installment}}}</li>
+                                        <li class="last-installment">{{{formatcurrency afterpay.last_installment}}}</li>
+                                    </ul>
+                                    <ul class="icon">
+                                        <li>
+                                            <img src="{{config.skin_url}}../../base/default/afterpay/images/checkout/circle_1@2x.png" alt="" />
+                                        </li>
+                                        <li>
+                                            <img src="{{config.skin_url}}../../base/default/afterpay/images/checkout/circle_2@2x.png" alt="" />
+                                        </li>
+                                        <li>
+                                            <img src="{{config.skin_url}}../../base/default/afterpay/images/checkout/circle_3@2x.png" alt="" />
+                                        </li>
+                                        <li>
+                                            <img src="{{config.skin_url}}../../base/default/afterpay/images/checkout/circle_4@2x.png" alt="" />
+                                        </li>
+                                    </ul>
+                                    <ul class="instalment">
+                                        <li>First payment</li>
+                                        <li>2 weeks later</li>
+                                        <li>4 weeks later</li>
+                                        <li>6 weeks later</li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="fineprint">By ordering you agree to <a class="nobreak" href="http://www.afterpay.com.au/terms/" target="_blank">Afterpay Terms &amp; Conditions</a></div>
+                    <div class="inner center submit-button-container-afterpay">
+                        <button type="button" data-payment-method="afterpaypayovertime" class="btn submit-order afterpay"><i class="q_afterpay-logo"></i> Pay with Afterpay</button>
+                    </div>
+
+                </div>
+
+            </li>
+            {{/if}}
+        </ul>
+    </div><!--/paymentoptions-->
+
+    <div class="freepayment{{#if cartView.summary.totals.grand_total.value}} hidden{{/if}}">
+        <div class="fineprint">By ordering you agree to <a class="nobreak" href="{{config.base_url}}terms-and-conditions" target="_blank">Terms &amp; Conditions</a></div>
+        <div class="inner">
+            <button type="submit" data-payment-method="free" id="submit-order-free" class="btn submit-order"> SUBMIT ORDER </button>
+        </div>
+    </div>
+
+    {{#if config.hidden_addresses}}
+        <div style="display: none">
+            <div id="addresses-unavailable-info">
+                <div class="addresses-unavailable-info">
+                {{config.hidden_addresses}} saved address{{#compare config.hidden_addresses "!=" "1"}}es are{{else}} is{{/compare}} unavailable due to: <br>
+                - Shipping restrictions on one or more items in your bag<span class="mbp-multi-only">, or<br>
+                - Delivery only being available to Australia and New Zealand for Bonds & Co. orders.</span>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+
+</div>

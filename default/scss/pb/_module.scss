@@ -1,0 +1,51 @@
+/**
+ * Pacific Brands - Framework Modules
+ *
+ * This file contains common framework modules for all theme stylesheets.
+ * 
+ * Modules should either be here, or in the common style sheet not both.
+ * 
+ * @category    design
+ * @package     pacbrands_default
+ * @copyright   Copyright (c) 2014 Pacific Brands Limited
+ */
+
+// =============================================
+// Common Framework Module Imports
+// =============================================
+
+
+// ----------------------------------------------
+// RWD Modules
+
+// The sort order here is important for two reasons:
+//  1. The compiled CSS needs to be logically ordered/grouped (NOT alphabetically ordered)
+//  2. Selectors of equal weight get applied based on which appears last in the stylesheet,
+//     so we should try not to change this order once it is in place
+
+@import "module/product-list";
+@import "module/catalog-product";
+@import "module/catalog-msrp";
+@import "module/catalog-compare";
+@import "module/checkout-cart";
+@import "module/checkout-onepage";
+@import "module/checkout-success";
+@import "module/configurableswatches";
+@import "module/customer";
+@import "module/contacts";
+@import "module/paypal";
+@import "module/review";
+@import "module/slideshow";
+@import "module/wishlist";
+@import "module/checkout-cart-minicart";
+@import "module/search";
+@import "module/account-reviews";
+@import "module/cms";
+@import "module/pricing_conditions";
+@import "module/cookies";
+
+
+// ----------------------------------------------
+// PB Modules
+
+

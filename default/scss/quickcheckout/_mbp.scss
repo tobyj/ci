@@ -1,0 +1,369 @@
+$mobileHeaderHeight: 55px !default; //usually height of .header_mobile_inner a.nav_toggle, but varies between sites
+
+.mbp-header {
+  position: relative;
+  z-index: 0;
+  display: none; //default hidden unless body.mbp-on
+  line-height: 1;
+  font-size: 20px;
+  text-align: center;
+  background: #222;
+  color: #fff;
+  @include breakpoint(1200px) {
+    font-size: 22px;
+  }
+  .l_grid {
+    position: relative;
+    padding: 0;
+    min-height: 51px;
+    @include breakpoint($tablet) {
+      min-height: 60px;
+    }
+    @include breakpoint(max-width $bp2) {
+      min-height: 75px;
+    }
+  }
+  .mbp-info {
+    text-transform: uppercase;
+    line-height: 1.5;
+    padding: 0 0 7px 0;
+    position: relative;
+    font-size: 45%;
+    opacity: 0;
+    @include transition(opacity 200ms);
+    @include breakpoint(320px) {
+      padding: 0 0 6px 0;
+    }
+    @include breakpoint(500px) {
+      font-size: 51%;
+    }
+    @include breakpoint(768px) {
+      padding: 6px 0 12px 0;
+    }
+    @include breakpoint(1030px) {
+      top: 50%;
+      position: absolute;
+      right: 25px;
+      @include transform(translateY(-50%));
+      line-height: 1;
+      padding: 0;
+      font-size: 51%;
+    }
+    @include breakpoint(1200px) {
+      font-size: 56%;
+    }
+    &.ready {
+      opacity: 1;
+    }
+  }
+  .mbp-desc {
+
+  }
+  .mbp-flag { //.your-country-flag
+    position: absolute;
+    right: 10px;
+    top: 45%;
+    @include transform(translateY(-50%));
+    margin-top: -4px;
+    cursor: pointer;
+    @include breakpoint(1030px) {
+      right: 0;
+      top: 90%;
+    }
+    img {
+      position: absolute;
+      top: 50%;
+      @include transform(translateY(-50%));
+      box-shadow: 0 2px 7px 0 black;
+    }
+  }
+  ul {
+    float: none;
+    padding: 5px 0;
+    @include breakpoint(320px) {
+      display: block;
+      padding: 10px 0 5px 0;
+    }
+    @include breakpoint(1030px) {
+      padding-top: 15px;
+      margin-left: 22px;
+      float: left;
+    }
+  }
+  i {
+    &:before,
+    &:after {
+      color: inherit;
+    }
+  }
+  .q_champion:before {
+    color: transparent;
+  }
+  a {
+    &.mbp-shipping-cta {
+      border: 0;
+      display: block;
+      color: #fff;
+      margin-right: 0;
+      @include breakpoint(500px) {
+        display: inline-block;
+      }
+      @include breakpoint(1030px) {
+        margin-right: 42px;
+      }
+    }
+  }
+  li {
+    //opacity: 0; //hide MBP store logos and reveal only the ones that enabled once we get them from StoreService - see OI-907
+    @include transition(opacity 500ms);
+    display: inline-block;
+
+    @include breakpoint(320px) {
+      font-size: 22px;
+      padding-right: 2.5vw;
+    }
+    @include breakpoint(500px) {
+      padding-right: 1vw;
+    }
+    &:first-of-type {
+      a {
+        margin-left: 0;
+        padding-left: 0;
+      }
+    }
+    &.enabled {
+      opacity: 1;
+    }
+    &.disabled {
+      opacity: 0;
+      pointer-events: none;
+    }
+    a {
+      color: #8e8e8e;
+      display: block;
+      border-bottom: 0;
+      &:hover {
+        i {
+          color: white;
+        }
+        .q_berlei:after {
+          color: #A6192E;
+        }
+        .q_champion:before {
+          color: #e51937;
+        }
+      }
+    }
+  }
+  .current {
+    i {
+      color: white;
+    }
+    .q_berlei:after {
+      color: #A6192E;
+    }
+    .q_champion:before {
+      color: #e51937;
+    }
+  }
+}
+
+body.mbp-on {
+  padding-top: $mbp_header_body_padding_desktop;
+  @include breakpoint($tablet) {
+    padding-top: $mbp_header_body_padding_tablet;
+  }
+  @include breakpoint(max-width $bp2) {
+    padding-top: $mbp_header_body_padding_mobile;
+  }
+  .mbp-header {
+    display: block;
+  }
+  .header_notice,
+  .header_notice_mobile {
+    display: none;
+  }
+  .header_mobile_inner .mbp-header a {
+    padding: 0 0 6px 0;
+  }
+  .mbp-on-only {
+    display: block;
+  }
+  span.mbp-on-only {
+    display: inline;
+    &.mbp-flag {
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }
+  .mbp-on-hide {
+    display: none;
+  }
+  // Headroom styling
+  footer.header_mobile {
+    &.headroom--unpinned {
+      @include transform(translateY(-webkit-calc(-100% + #{$mobileHeaderHeight})));
+      @include transform(translateY(calc(-100% + #{$mobileHeaderHeight})));
+    }
+    &.change_transition_type {
+      @include transition(transform 400ms $cubic_anim);
+      // @include transform(translate3d(-480px, 0, 0));
+    }
+    @include breakpoint($desktop) {
+      display: none;
+    }
+  }
+  // Simple header
+  //header.header_mobile {
+  //
+  //  .header_mobile_inner {
+  //    // TODO: add condition so this will still display on simple layouts
+  //    display: none;
+  //  }
+  //
+  //  .header_notice_mobile {
+  //    display: none;
+  //  }
+  //}
+  .below-500 {
+    @include breakpoint(min-width 500px) {
+      display: none;
+    }
+  }
+}
+
+.mbp-multi-only {
+  display: none; //default
+}
+.mbp-multi {
+  .mbp-multi-only {
+    display: block;
+  }
+  span.mbp-multi-only {
+    display: inline;
+  }
+  .mbp-multi-hide {
+    display: none !important;
+  }
+}
+
+.header_mobile_inner {
+  height: auto;
+}
+
+
+/**
+** RETURNS FORM
+**/
+#mbp-returns-form {
+  display: block;
+  max-width: 550px;
+  margin: 0 auto;
+  padding: 1em;
+  > h2 {
+    margin-top: 0;
+  }
+  label {
+    display: block;
+  }
+  input, textarea, .select_wrap {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5em;
+  }
+  button {
+    text-transform: uppercase;
+    &.remove {
+      float: right;
+    }
+    &.add-another {
+      margin: 1em 0;
+    }
+    &[type="submit"] {
+      display: block;
+      clear: both;
+    }
+  }
+  fieldset {
+    position: relative;
+    margin-top: 1em;
+    background: rgba(51, 51, 51, 0.17);
+    padding: 1em;
+    border-radius: 3px;
+    &:first-of-type {
+      .remove {
+        display: none;
+      }
+    }
+  }
+  legend {
+    background: #000;
+    color: #fff;
+    padding: 0.5em 1em;
+    display: block;
+  }
+  .btn-group {
+    .btn {
+      &:first-child {
+        float: left;
+      }
+      &:last-child {
+        float: right;
+      }
+      @include breakpoint($mobile) {
+        float: none;
+        width: 100%;
+        margin-top: 0.5em;
+      }
+    }
+  }
+  .error_note,
+  .validation-advice {
+    padding: 0 0 15px 0;
+  }
+
+  .form-text {
+    p:first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  select+.error_note, select+.validation-advice {
+    border: 1px solid lime;
+    &:after {
+      visibility: hidden;
+      display: block;
+      font-size: 0;
+      content: " ";
+      clear: both;
+      height: 0;
+      border: 1px solid red;
+    }
+  }
+}
+// Customer Returns URL: /returns/customer_returns/list/
+#create-return-form {
+  input {
+    margin: 10px 0 20px 0;
+  }
+}
+
+// Returns popup box
+.pacbrands-mbp-returns-index {
+  #help-modal {
+    padding: 20px;
+
+    ol {
+      list-style-type: decimal;
+      li {
+        margin: 0 0 10px 20px;
+
+      }
+    }
+    img {
+      display: block;
+      margin: 20px auto 0 auto;
+    }
+  }
+}
+

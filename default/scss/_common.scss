@@ -1,0 +1,24 @@
+/**
+ * Pacific Brands - Common Core Includes
+ *
+ * Imports all the local files for common stylesheet
+ *
+ * @category    design
+ * @package     pacbrands_bonds
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+
+
+// ----------------------------------------------
+// Modules
+
+// The sort order here is important for two reasons:
+//  1. The compiled CSS needs to be logically ordered/grouped (NOT alphabetically ordered)
+//  2. Selectors of equal weight get applied based on which appears last in the stylesheet,
+//     so we should try not to change this order once it is in place
+
+@import "module/mypacificbrands";
+@import "module/colorbox";
+@import "module/pronav";
+

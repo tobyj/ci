@@ -1,0 +1,74 @@
+/**
+ * Pacific Brands - My Pacific Brands
+ *
+ * The common styling for My Pacific Brands
+ *
+ * @category    design
+ * @package     pacbrands_default
+ * @copyright   Copyright (c) 2014 Pacific Brands Limited
+ */
+
+.mypacificbrands-header { height: 67px; background: white 0 60px repeat-x; border-bottom: 1px solid #7b7b7b; }
+.mypacificbrands-inner { max-width:960px; height:65px; margin:0 auto; position:relative; }
+.mypacificbrands-logo { position:absolute; left:0; top:5px; }
+.mypacificbrands-group { position:absolute; right:0; top:5px; line-height:50px;  color: #999; font-size:18px; font-family: Georgia, "Times New Roman", Times, serif !important; font-weight: 100!important; font-style: italic !important;}
+
+.mybrands-header { background: white; border-bottom:7px solid #49C0B6; }
+.mybrands-header .mypacificbrands-group { font-family: Helvetica, sans-serif !important; font-style: normal !important; font-weight: normal !important; color: #49C0B6 !important; }
+.mybrands-header .mypacificbrands-return { position:absolute;  top:38px; }
+.mybrands-header .mypacificbrands-return a { font-size: 11px !important; font-weight: normal !important; }
+
+.mypacificbrands-header .mypacificbrands-logo img{  height: 50px;   }
+.mypacificbrands-header .mypacificbrands-logo.mybrands-logo img{ height: auto;}
+
+@media (max-width: 600px) {
+  .mypacificbrands-header{
+    height: 51px;
+    &.mybrands-header{
+      height: 65px;
+    }
+    .mypacificbrands-logo{
+        img{
+          max-height: 100%;
+          height: inherit;
+          width: 150px;
+          padding-top: 10px;
+        }
+    }
+  }
+}
+@media (min-width: 601px) {
+  body .mypacificbrands-header .mypacificbrands-inner .mypacificbrands-logo{
+    padding-top: 14px;
+    &.mybrands-logo{
+      img{
+        height: auto;
+      }
+    }
+    img{
+      height: 42px;
+    }
+  }
+}
+
+@include bp( max-width, $bp-small ) {
+.mypacificbrands-group { display:none; }
+  .mypacificbrands-header{
+    .mypacificbrands-logo{
+      &.mybrands-logo{
+      img{
+        width: 130px;
+      }
+    }
+        img{
+          max-height: 100%;
+          height: inherit;
+          width: 150px;
+          padding-top: 10px;
+        }
+    }
+  }
+}
+
+
+

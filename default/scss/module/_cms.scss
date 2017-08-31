@@ -1,0 +1,19 @@
+
+// Override default text styling in modules
+.cms-page-view,
+.cms-no-route {
+    .std {
+        p {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 100%;
+            font-style: normal;
+            line-height: 150%;
+        }
+        li {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 100%;
+            font-style: normal;
+            line-height: 150%;
+        }
+    }
+}

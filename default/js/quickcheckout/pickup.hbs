@@ -1,0 +1,149 @@
+<div class="shadow">
+    <div class="filters">
+        {{#compare pickup_methods.store_pick_up "||" pickup_methods.warehouse_ship_store_pick_up}}
+            <input type="checkbox" id="filter_store" name="filter_store" checked/>
+            <label for="filter_store" data-count="{{meta.store_pick_up.totals.available}}" onclick><i class="q_store_small"></i><span> Stores</span></label>
+        {{/compare}}
+        {{#if pickup_methods.aust_post_collection_points}}
+        {{!-- filter checked if available stores = zero --}}
+        <input type="checkbox" id="filter_auspost" name="filter_auspost"{{#unless delivery_methods.pickup_store}} checked{{/unless}} />
+        <label for="filter_auspost" data-count="{{meta.aust_post_collection_points.totals.available}}" onclick><i class="q_auspost"></i><span>Post Offices</span></label>
+        {{else}}
+            {{#if pickup_methods.aust_post_collection_points_alternative}}
+                <input type="checkbox" id="filter_auspost" name="filter_auspost"{{#unless delivery_methods.pickup_store}} checked{{/unless}} />
+                <label for="filter_auspost" data-count="{{meta.aust_post_collection_points_alternative.totals.available}}" onclick><i class="q_auspost"></i><span>Post Offices</span></label>
+            {{/if}}
+        {{/if}}
+        {{#if pickup_methods.aust_post_parcel_lockers}}
+        <input type="checkbox" id="filter_locker" name="filter_locker" />
+        <label for="filter_locker" data-count="{{meta.aust_post_parcel_lockers.totals.available}}" onclick><i class="q_locker"></i><span>Parcel Lockers</span></label>
+        {{/if}}
+    </div>
+    {{#compare pickup_methods.store_pick_up "||" pickup_methods.warehouse_ship_store_pick_up}}
+        {{#if meta.store_pick_up.totals.available}}
+            {{#compare meta.store_pick_up.totals.no_stock "!=" 0}}
+            <div class="store-only hide-on-select{{#unless meta.store_pick_up.totals.available}} off{{/unless}}">
+                <div class="msg"><input type="checkbox" id="filter_store_disabled" name="filter_store_disabled" />
+                <label for="filter_store_disabled" class="discreet" onclick> Hide {{meta.store_pick_up.totals.no_stock}} unavailable stores</label></div>
+            </div>
+            {{/compare}}
+            <div class="store-only hide-on-select store-warning">
+                <div class="msg can-dismiss">{{{qc_translate "Click & Collect is currently limited to selected stores"}}}</div>
+            </div>
+        {{else}}
+            <div class="store-only">
+                <div class="msg error">No stores available to fulfil your order.</div>
+            </div>
+        {{/if}}
+    {{/compare}}
+
+    {{#if pickup_methods.aust_post_parcel_lockers}}
+    <div class="locker-only off">
+        <div class="msg error">Parcel Lockers require a <a href="#" class="parcel-locker-more">MyPost account</a></div>
+    </div>
+    {{/if}}
+    {{#if meta.aust_post_collection_points.totals.available}}{{#if meta.aust_post_collection_points_alternative.totals.available}}
+        <div class="msg error">Multiple <em>AusPost Collection Points</em> sources enabled!</div>
+    {{/if}}{{/if}}
+</div>
+<ul class="locationlist{{#unless locations}} hidden{{/unless}}">
+
+    {{#each locations}}
+
+        {{!-- status: disabled = click & collect for this store is disabled via admin --}}
+
+        <li data-id="{{id}}"{{#if shipping}} data-shipping="{{shipping}}"{{/if}} class="{{#compare type "==" "store_pick_up"}}store{{#compare status "!=" "available"}} unavailable{{/compare}}{{/compare}}{{#compare type "==" "aust_post_collection_points"}}auspost{{#if meta.store_pick_up.totals.available}} off{{/if}}{{/compare}}{{#compare type "==" "aust_post_collection_points_alternative"}}auspost auspost-alt{{#if meta.store_pick_up.totals.available}} off{{/if}}{{/compare}}{{#compare type "==" "aust_post_parcel_lockers"}}locker off{{/compare}}"{{#if status}} data-status="{{status}}"{{/if}} tabindex="0">
+                <div>{{#round}}{{distance}}{{/round}}km</div>
+                <div><i class="{{#compare type "==" "store_pick_up"}}q_store_small{{/compare}}{{#compare type "==" "aust_post_collection_points"}}q_auspost{{/compare}}{{#compare type "==" "aust_post_collection_points_alternative"}}q_auspost{{/compare}}{{#compare type "==" "aust_post_parcel_lockers"}}q_locker{{/compare}}"></i><span>{{name}}</span></div>
+                <div class="detail">
+                    {{#compare type "==" "store_pick_up"}}
+                    <div class="when">
+                        {{#compare status "==" "available"}}
+                        Collect after <b data-lead-time="{{leadtime}}" data-pickup-time="{{pickup_time}}">{{pickup_time_pretty}}</b>
+                        {{/compare}}
+                        {{#compare status "==" "disabled"}}
+                            Click &amp; Collect disabled for this store
+                        {{/compare}}
+                        {{#compare status "==" "no_stock"}}
+                            Click & Collect not available at this location due to insufficient stock
+                        {{/compare}}
+                        {{#compare status "==" "monogram"}}
+                            {{status_message}}
+                        {{/compare}}
+                    </div>
+                    {{/compare}}
+
+                    {{#compare status "!=" "disabled"}}{{#compare status "!=" "no_stock"}}{{#compare status "!=" "monogram"}}
+                    {{#if address}}
+                        <div class="address">
+                            {{#each address.lines}}
+                                {{.}}<br>
+                            {{/each}}
+                            <span class="suburb">{{address.suburb}}</span> <span class="state">{{#if address.region}}{{address.region}}{{else}}{{address.state}}{{/if}}</span> <span class="postcode">{{address.postcode}}</span>
+                            {{#compare address.country "!=" "AU"}}<span class="country clearfix">{{country}}</span>{{/compare}}
+                            {{#if phone}}
+                                <br><a class="phone clearfix" href="tel:{{phone}}"><i class="q_phone"></i> {{phone}}</a>
+                            {{/if}}
+
+                            <a class="btn secondarybtn" tabindex="-1"  data-geo-lat="{{geolocation.latitude}}" data-geo-lon="{{geolocation.longitude}}" href="http://maps.google.com/maps?z=12&t=m&q=loc:{{geolocation.latitude}}+{{geolocation.longitude}}" target="_blank"><i class="q_location"></i> Map</a>
+
+                            {{#each address.lines}}<input type="hidden" name="pickup[street][]" id="pickup:street{{increment @index}}" value="{{.}}">{{/each}}
+                            <input type="hidden" name="pickup[city]" id="pickup:city" value="{{address.suburb}}">
+                            <input type="hidden" name="pickup[postcode]" id="pickup:postcode" value="{{address.postcode}}">
+                            <input type="hidden" name="pickup[region_id]" id="pickup:region_id" value="{{#if address.region}}{{getRegionIdByCode "AU" address.region}}{{else}}{{getRegionIdByCode "AU" address.state}}{{/if}}">
+                            <input type="hidden" name="pickup[region]" id="pickup:region" value="{{#if address.region}}{{address.region}}{{else}}{{address.state}}{{/if}}">
+                            <input type="hidden" name="pickup[country_id]" id="pickup:country_id" value="AU">
+                        </div>
+                    {{/if}}
+                    {{#if hours}}
+                        <ul class="opentimes{{#compare type "==" "aust_post_collection_points"}} expandable{{/compare}}{{#compare type "==" "store_pick_up"}} expandable{{/compare}}">
+
+                            {{#compare type "==" "aust_post_collection_points"}}
+                                {{#each hours}}
+                                    <li><span>{{day}}</span><span>{{#if open}}{{open}} - {{close}}{{else}}Closed{{/if}}</span></li>
+                                {{/each}}
+                            {{/compare}}
+
+                            {{#compare type "==" "aust_post_collection_points_alternative"}}
+                                <li><span>Open</span><span>{{hours}}</span></li>
+                            {{/compare}}
+
+                            {{#compare type "==" "store_pick_up"}}
+                                {{#each hours}}
+                                    <li><span>{{day}}</span><span>{{#if open}}{{open}} - {{close}}{{else}}Closed{{/if}}</span></li>
+                                {{/each}}
+                            {{/compare}}
+
+                            {{#compare type "==" "aust_post_parcel_lockers"}}
+                                {{#if note}}<li><span>Note</span><span>{{note}}</span></li>{{/if}}
+                                <li><span>Open</span><span>{{hours}}</span></li>
+                            {{/compare}}
+
+                        </ul>
+                    {{/if}}
+
+
+                    <div>
+                        <button {{#compare status "!=" "available"}}disabled{{/compare}} type="button" tabindex="-1" class="btn primarybtn" data-method="{{#compare type "==" "store_pick_up"}}{{#compare shipping "==" "clickcollect_warehouse"}}clickcollect_warehouse{{else}}clickcollect_store{{/compare}}{{/compare}}{{!--{{#compare type "==" "aust_post_collection_points"}}clickcollect_ap_collection_point{{/compare}}{{#compare type "==" "aust_post_collection_points_alternative"}}clickcollect_ap_collection_point{{/compare}}{{#compare type "==" "aust_post_parcel_lockers"}}clickcollect_ap_parcel_locker{{/compare}}--}}"><i class="q_checkmark"></i> COLLECT HERE</button>
+                    </div>
+                    {{/compare}}{{/compare}}{{/compare}}
+                </div>
+            </li>
+
+    {{/each}}
+    <button type="button" class="btn changelocation">
+        <i class="q_arrow-left"></i> Change collection location...
+    </button>
+</ul>
+{{#if pickup_methods.aust_post_parcel_lockers}}
+<div class="locker-only shadowup off field locker-only-phone" tabindex="0">
+    <input name="mobilephone" id="mobilephone" type="text" placeholder="Mobile Phone (req. for Parcel Locker)">
+    <label for="mobilephone">MOBILE PHONE NUMBER</label>
+</div>
+{{/if}}
+{{#compare pickup_methods.store_pick_up "||" pickup_methods.warehouse_ship_store_pick_up}}
+    <div class="store-only shadowup off field store-only-phone" tabindex="0">
+        <input name="shipping[telephone]" id="shipping:telephone" type="text" placeholder="Phone Number (req. for Store Collection)">
+        <label for="shipping:telephone">PHONE NUMBER</label>
+    </div>
+{{/compare}}

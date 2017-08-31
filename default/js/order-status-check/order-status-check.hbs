@@ -1,0 +1,28 @@
+<h2>Order #{{number}}</h2>
+<div class="l_two_thirds l_tablet_two_thirds l_mobile_full arrow-right">
+    <div class="status">Order Status: <strong>{{better_status status tracking}}</strong> <em>{{status_detail status tracking}}</em></div>
+    <div class="placed"><span class="date-label">Placed on:</span> <strong>{{placed.date_pretty}}</strong></div>
+    {{#compare status "!=" "holded"}}
+        {{#if dispatch}}<div class="dispatch-est hidden"><span class="date-label">Dispatch estimate:</span> <strong>{{dispatch.estimate}}</strong></div>{{/if}}
+        {{#if delivery}}<div class="delivery-est"><span class="date-label">Delivery estimate:</span> <strong>{{delivery.estimate.date}}</strong></div>{{/if}}
+    {{/compare}}
+    {{#if tracking}}<div class="tracking">Track your delivery:<ul>{{/if}}
+    {{#each tracking}}
+        <li>{{tracking_link tracking_number tracking_carrier}}
+            <div>Shipped: <strong>{{shipped_date_pretty}}</strong></div>
+            {{#if delivery_estimate}}
+                <div>Delivery Estimate ({{delivery_estimate.method}}): <strong>{{delivery_estimate.estimate.date}}</strong></div>
+            {{/if}}
+        </li>
+    {{/each}}
+    <div class="tracking-warning"><strong>Tracking number not working?</strong> Please allow 3-6 hours after dispatch (see "Shipped" date above) for your tracking number to be scanned and become active.</div>
+    {{#if tracking}}</ul></div>{{else}}<p class="no-tracking">Your order does not {{#compare status "!==" "complete"}}yet {{/compare}}have tracking details.</p>{{/if}}
+</div>
+<div class="l_third l_tablet_third l_mobile_full l_last status-{{status}}">
+    <ul class="order-progress">
+        <li title="Placed: {{placed.date_pretty}}"><i class="i_checkmark"></i> Placed</li>
+        <li><i class="i_package"></i> {{#compare status "==" "holded"}}On Hold{{else}}Processing{{/compare}}</li>
+        <li{{#if dispatch}} title="Dispatch estimate: {{dispatch.date_pretty}}"{{/if}}><i class="i_van"></i> In Transit</li>
+        <li{{#if delivery}} title="Delivery estimate: {{delivery.estimate.date}}"{{/if}}><i class="i_box"></i> Complete</li>
+    </ul>
+</div>

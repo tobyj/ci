@@ -1,0 +1,18 @@
+{
+  "name": "Bonds",
+  "version": "1.0.1",
+  "devDependencies": {
+    "breakpoint": "^0.1.6",
+    "grunt": "^0.4.5",
+    "grunt-bless": "~0.2.0",
+    "grunt-contrib-concat": "~1.0.0",
+    "grunt-contrib-csslint": "~1.0.0",
+    "grunt-contrib-cssmin": "~1.0.1",
+    "grunt-contrib-handlebars": "^1.0.0",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-uglify": "~1.0.1",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-sass": "^1.1.0",
+    "matchdep": "~1.0.1"
+  }
+}

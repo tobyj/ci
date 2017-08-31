@@ -1,0 +1,373 @@
+@import "variables";
+
+@font-face {
+  font-family: 'quickcheckout';
+  src:  url('#{$icomoon-font-path}/quickcheckout.eot?iqbdgf');
+  src:  url('#{$icomoon-font-path}/quickcheckout.eot?iqbdgf#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/quickcheckout.ttf?iqbdgf') format('truetype'),
+    url('#{$icomoon-font-path}/quickcheckout.woff?iqbdgf') format('woff'),
+    url('#{$icomoon-font-path}/quickcheckout.svg?iqbdgf#quickcheckout') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="q_"], [class*=" q_"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'quickcheckout' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.q_bondsco_alt {
+  &:before {
+    content: $q_bondsco_alt;
+  }
+}
+.q_bondsco {
+  &:before {
+    content: $q_bondsco;
+  }
+}
+.q_secure {
+  &:before {
+    content: $q_secure;
+  }
+}
+.q_gift {
+  &:before {
+    content: $q_gift;
+  }
+}
+.q_scooter {
+  &:before {
+    content: $q_scooter;
+  }
+}
+.q_van {
+  &:before {
+    content: $q_van;
+  }
+}
+.q_cart-empty {
+  &:before {
+    content: $q_cart-empty;
+  }
+}
+.q_cart-full {
+  &:before {
+    content: $q_cart-full;
+  }
+}
+.q_sign-in {
+  &:before {
+    content: $q_sign-in;
+  }
+}
+.q_cross {
+  &:before {
+    content: $q_cross;
+  }
+}
+.q_checkmark {
+  &:before {
+    content: $q_checkmark;
+  }
+}
+.q_minus {
+  &:before {
+    content: $q_minus;
+  }
+}
+.q_plus {
+  &:before {
+    content: $q_plus;
+  }
+}
+.q_arrow-left {
+  &:before {
+    content: $q_arrow-left;
+  }
+}
+.q_arrow-down {
+  &:before {
+    content: $q_arrow-down;
+  }
+}
+.q_arrow-up {
+  &:before {
+    content: $q_arrow-up;
+  }
+}
+.q_arrow-right {
+  &:before {
+    content: $q_arrow-right;
+  }
+}
+.q_instagram {
+  &:before {
+    content: $q_instagram;
+  }
+}
+.q_twitter {
+  &:before {
+    content: $q_twitter;
+  }
+}
+.q_facebook {
+  &:before {
+    content: $q_facebook;
+  }
+}
+.q_pinterest-p {
+  &:before {
+    content: $q_pinterest-p;
+  }
+}
+.q_envelope {
+  &:before {
+    content: $q_envelope;
+  }
+}
+.q_location {
+  &:before {
+    content: $q_location;
+  }
+}
+.q_target {
+  &:before {
+    content: $q_target;
+  }
+}
+.q_paypal-alt {
+  &:before {
+    content: $q_paypal-alt;
+  }
+}
+.q_mastercard {
+  &:before {
+    content: $q_mastercard;
+  }
+}
+.q_amex {
+  &:before {
+    content: $q_amex;
+  }
+}
+.q_visa {
+  &:before {
+    content: $q_visa;
+  }
+}
+.q_visa-checkout-alt {
+  &:before {
+    content: $q_visa-checkout-alt;
+  }
+}
+.q_paypal {
+  &:before {
+    content: $q_paypal;
+  }
+}
+.q_afterpay-logo {
+  &:before {
+    content: $q_afterpay-logo;
+  }
+}
+.q_visa-checkout {
+  &:before {
+    content: $q_visa-checkout;
+  }
+}
+.q_afterpay-text {
+  &:before {
+    content: $q_afterpay-text;
+  }
+}
+.q_auspost {
+  &:before {
+    content: $q_auspost;
+  }
+}
+.q_locker {
+  &:before {
+    content: $q_locker;
+  }
+}
+.q_click-collect {
+  &:before {
+    content: $q_click-collect;
+  }
+}
+.q_bonds {
+  &:before {
+    content: $q_bonds;
+  }
+}
+.q_bondsb {
+  &:before {
+    content: $q_bondsb;
+  }
+}
+.q_berlei {
+  position: relative;
+  &:before {
+    content: $q_berlei;
+  }
+  &:after {
+    content: $q_berleib;
+    position: absolute;
+    top: 48.4%;
+    @include transform(translateY(-50%));
+    left: -2%;
+    font-size: 60%;
+    color: #A6192E;
+  }
+}
+.q_berleib {
+  &:before {
+    content: $q_berleib;
+  }
+}
+.q_sheridan {
+  &:before {
+    content: $q_sheridan;
+  }
+}
+.q_sheridans {
+  &:before {
+    content: $q_sheridans;
+  }
+}
+.q_champion {
+  position: relative;
+  &:before {
+    content: $q_champion-red;
+    color: #e51937;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  &:after {
+    content: $q-champion;
+    z-index: 1;
+    position: relative;
+  }
+}
+.q_champion-red {
+  &:before {
+    content: $q_champion-red;
+  }
+}
+.q_jockey {
+  &:before {
+    content: $q_jockey;
+  }
+}
+.q_jockeyicon {
+  &:before {
+    content: $q_jockeyicon;
+  }
+}
+.q_bondsoutlet {
+  &:before {
+    content: $q_bondsoutlet;
+  }
+}
+.q_playtex {
+  &:before {
+    content: $q_playtex;
+  }
+}
+.q_bin {
+  &:before {
+    content: $q_bin;
+  }
+}
+.q_exclamation-triangle {
+  &:before {
+    content: $q_exclamation-triangle;
+  }
+}
+.q_heart-o {
+  &:before {
+    content: $q_heart-o;
+  }
+}
+.q_heart {
+  &:before {
+    content: $q_heart;
+  }
+}
+.q_star-half-empty {
+  &:before {
+    content: $q_star-half-empty;
+  }
+}
+.q_star-half-full {
+  &:before {
+    content: $q_star-half-full;
+  }
+}
+.q_star-half-o {
+  &:before {
+    content: $q_star-half-o;
+  }
+}
+.q_star-o {
+  &:before {
+    content: $q_star-o;
+  }
+}
+.q_star {
+  &:before {
+    content: $q_star;
+  }
+}
+.q_plane {
+  &:before {
+    content: $q_plane;
+  }
+}
+
+
+/* Afterpay logo: horizontal and stacked: */
+.q_afterpay {
+  &:before {
+    content: $q_afterpay-logo;
+  }
+  &:after {
+    content: $q_afterpay-text;
+  }
+}
+.q_afterpay-stacked {
+  text-align: center;
+  line-height: 0.9 !important;
+  &:before {
+    display: inline-block;
+    content: $q_afterpay-logo;
+    font-size: 150%;
+  }
+  &:after {
+    display: block;
+    content: $q_afterpay-text;
+  }
+}
+
+.q_store {
+  &:before {
+    content: $q_store;
+  }
+}
+.q_store_small {
+  &:before {
+    content: $q_store_small;
+  }
+}
