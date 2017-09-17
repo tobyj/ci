@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "canvas": "^1.6.7",
-    "node-gyp": "^3.6.2"
+    "node-gyp": "^3.6.2",
+    "resemblejs": "^2.2.6"
   },
   "scripts": {
     "test": "casperjs test --ignore-ssl-errors=true tests/sample.js"
