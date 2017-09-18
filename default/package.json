@@ -3,8 +3,9 @@
   "version": "1.0.1",
   "devDependencies": {
     "breakpoint": "^0.1.6",
+    "casperjs": "^1.1.4",
     "grunt": "~1.0.1",
-    "grunt-bless": "^0.2.0",
+    "grunt-bless": "^1.0.2",
     "grunt-contrib-concat": "~1.0.0",
     "grunt-contrib-csslint": "~1.0.0",
     "grunt-contrib-cssmin": "~1.0.1",
@@ -13,6 +14,15 @@
     "grunt-contrib-uglify": "~1.0.1",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-sass": "^1.1.0",
-    "matchdep": "~1.0.1"
+    "matchdep": "~1.0.1",
+    "phantomcss": "^1.1.5",
+    "phantomjs-prebuilt": "^2.1.15"
+  },
+  "dependencies": {
+    "canvas": "^1.6.7",
+    "resemblejs": "^2.2.6"
+  },
+  "scripts": {
+    "test": "casperjs test --ignore-ssl-errors=true tests/sample.js"
   }
 }

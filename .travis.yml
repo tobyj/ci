@@ -1,11 +1,16 @@
 language: node_js
 node_js:
-  - "5"
-  - "node"
+  - "6"
+cache:
+  directories:
+    - default/node_modules
+    - default/bower_components
 before_install:
   - cd default
   - npm install -g grunt-cli
   - npm install -g bower
+  - sudo apt-get install libgif-dev #libcairo2-dev libjpeg8-dev libpango1.0-dev build-essential g++ #ubuntu canvas pre-reqs
+  # brew install pkg-config cairo libpng jpeg giflib #macos canvas pre-reqs
 install:
   - npm install
   - bower install
